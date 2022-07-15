@@ -111,7 +111,7 @@ prompt_time() {
 
 # Dir: current working directory
 prompt_dir() {
-  prompt_segment blue $PRIMARY_FG ' %~ '
+  prompt_segment 39d $PRIMARY_FG ' %~ '
 }
 
 # Status:
