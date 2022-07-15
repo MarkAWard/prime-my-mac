@@ -1,0 +1,94 @@
+[core]
+    editor = nano
+    excludesfile = ~/.git/.gitignore_global
+    sshCommand = "ssh -F /dev/null -o StrictHostKeyChecking=no"
+    pager = delta
+
+[include]
+    path = ~/.git/.gitconfig.user
+    #  Put your Github token here
+    path = ~/.git/.gitconfig.github
+
+[credential]
+    helper = osxkeychain
+
+[alias]
+    #  Get the current branch name (not so useful in itself, but used in other aliases)
+    branch-name = !git rev-parse --abbrev-ref HEAD
+    #  See commits not pushed yet
+    np = "!git log origin/$(git branch-name)..$(git branch-name)"
+    #  Push the current branch to the remote "origin", and set it to track the upstream branch
+    puo = "!git push -u origin $(git branch-name) --tags"
+    pom = pull origin master
+    pod = pull origin develop
+    pos = pull origin staging
+    #  Add + Commit
+    ac = !git add . && git commit -am
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+    st = status -u
+    co = checkout
+    com = checkout master
+    nb = checkout -b
+    df = diff
+    #  Diff last commit
+    last = diff --cached HEAD^
+    recap = log --oneline --no-merges --author=ifarfan@gmx.com
+    ls = branch --list -a
+    #  Compare current branch commits to master
+    compare = "!git log --left-right --graph --cherry-pick --oneline $(git branch-name)...master"
+    #  Refresh local list of remote branches (remove old ones also removed from origin)
+    rl = remote update origin --prune
+    #  uc = undo last commit; dc = destroy last commit
+    uc = reset HEAD~1
+    dc = reset --hard HEAD~1
+    #  https://carolynvanslyck.com/blog/2020/12/git-wip/
+    wip = for-each-ref --sort='authordate:iso8601' --format=' %(color:green)%(authordate:relative)%09%(color:white)%(refname:short)' refs/heads
+
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+
+[http]
+    sslVerify = false
+
+[diff]
+    #  Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
+    #  instead of a/b/c/d as prefixes for patches
+    mnemonicprefix = true
+    algorithm = patience
+
+[grep]
+    extendRegexp = true
+    lineNumber = true
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    features = side-by-side line-numbers decorations
+    whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none
+
+[pull]
+	rebase = false
