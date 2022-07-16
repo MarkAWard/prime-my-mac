@@ -68,6 +68,12 @@ serve() {
   python -m SimpleHTTPServer ${port}
 }
 
+# cleanup python files
+pyclean () {
+        find . -type f -name "*.py[co]" -delete
+        find . -type d -name "__pycache__" -delete
+}
+
 #  Aliases -- https://natelandau.com/my-mac-osx-bash_profile/
 function cd() { builtin cd "$@"; ll; }                       # Always list directory contents upon 'cd'
 mcd () { mkdir -p "$1" && cd "$1"; }                # Makes new Dir and jumps inside
