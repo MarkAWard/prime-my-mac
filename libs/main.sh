@@ -34,15 +34,25 @@ function status_msg {
     #
     #  Print package install status
     #
-    if [[ "$1" -ne 0 ]]; then
-        echo "${BOLD}[${RED}N${BOLD}]${NORMAL} Installing ${BLUE}$2${NORMAL}..."
+    timestamp=$(date +"%F %T")
+    if [[ $# -eq 1 ]]; then
+        echo "[$timestamp] ${CYAN}$1${NORMAL}";
+    elif [[ "$1" == "ALERT" ]]; then
+        echo "[$timestamp] ${CYAN}$2${NORMAL}";
+        osascript \
+            -e "on run(argv)" \
+            -e "  return display notification \"[$timestamp] \" & item 1 of argv with title \"prime-my-mac\"  subtitle \"...\"" \
+            -e "end" \
+            -- "$2"
+    elif [[ "$1" -ne 0 ]]; then
+        echo "[${BOLD}${RED}N${NORMAL}] Installing ${BLUE}$2${NORMAL}..."
         osascript \
             -e "on run(argv)" \
             -e "  return display notification \"Installing \" & item 1 of argv with title \"prime-my-mac\"  subtitle \"...\"" \
             -e "end" \
             -- "$2"
     else
-        echo "${BOLD}[${GREEN}Y${BOLD}]${NORMAL} ${BLUE}$2${NORMAL} installed"
+        echo "[${BOLD}${GREEN}Y${NORMAL}] ${BLUE}$2${NORMAL} installed"
         osascript \
             -e "on run(argv)" \
             -e "  return display notification item 1 of argv & \" installed\" with title \"prime-my-mac\"  subtitle \"...\"" \
@@ -68,27 +78,40 @@ function install_homebrew {
 function install_python {
     install_homebrew
 
-    local PYENV_ERR_CODE=$(brew list --formula | grep -q pyenv; echo $?)
+    local PYENV_ERR_CODE=$(brew list --formula | grep -q pyenv$; echo $?)
     status_msg "$PYENV_ERR_CODE" "pyenv"
     if [ "${PYENV_ERR_CODE}" -ne 0 ]; then
         #  Install latest version of pyenv
         brew install pyenv
+        status_msg "0" "pyenv"
     fi
     eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
 
     #  Install python versions
+    status_msg "Installing python versions"
     for ver in "${pyenv_versions[@]}"; do
-        pyenv install --version -s $ver
+        pyenv install -s $ver
     done
     pyenv global $pyenv_global
     status_msg "0" "python versions"
 
     #  Install pip packages
+    status_msg "Installing pip packages"
+    pip install -qq -U pip
     for pkg in "${pip_pkgs[@]}"; do
         pip install $pkg --quiet
     done
     status_msg "0" "pip packages"
+
+    local PYENVVENV_ERR_CODE=$(brew list --formula | grep -q pyenv-virtualenv$; echo $?)
+    status_msg "$PYENVVENV_ERR_CODE" "pyenv-virtualenv"
+    if [ "${PYENVVENV_ERR_CODE}" -ne 0 ]; then
+        #  Install latest version of pyenv
+        brew install pyenv-virtualenv
+        status_msg "0" "pyenv-virtualenv"
+    fi
+    eval "$(pyenv virtualenv-init -)"
 }
 
 
@@ -97,9 +120,11 @@ function install_brew {
     git -C $(brew --repository homebrew/core) checkout master
 
     #  Install packages
+    status_msg "Installing brew packages"
     for pkg in "${brew_pkgs[@]}"; do
         brew install ${pkg}
     done
+    status_msg "0" "brew packages"
 }
 
 
@@ -109,6 +134,7 @@ function install_brew_cask {
     #  Install cask packages
     brew tap homebrew/cask
     git -C $(brew --repository homebrew/cask) checkout master
+    status_msg "Installing cask packages"
     for pkg in "${cask_pkgs[@]}"; do
 
         if [[ ${pkg} =~ ":" ]]; then
@@ -127,10 +153,13 @@ function install_brew_cask {
             brew install --cask ${pkg}
         fi
     done
+    status_msg "0" "cask packages"
 }
 
 function install_brew_fonts {
     install_homebrew
+
+    status_msg "Installing cask fonts"
 
     #  A few fonts still run under svn
     brew install svn
@@ -140,6 +169,7 @@ function install_brew_fonts {
     for font in "${cask_fonts[@]}"; do
         brew install --cask font-$font
     done
+    status_msg "0" "cask fonts"
 }
 
 function install_prezto {

@@ -41,7 +41,7 @@ function app_store_tweaks {
 
 
 function dock_tweaks {
-    status_msg "0" "Custom Dock tweaks"
+    status_msg "Custom Dock tweaks"
 
     if [ "${#dock_apps[@]}" -gt 0 ]; then
         #  Remove everything off the dock first
@@ -51,15 +51,33 @@ function dock_tweaks {
         for dock_item in "${dock_apps[@]}"; do
             if [ "${dock_item}" == '--' ]; then
                 #  Add space divider
-                dockutil --add '' --type spacer --section apps
+                dockutil --add '' --type spacer --section apps --no-restart
             else
-                dockutil --add "/Applications/${dock_item}.app" --no-restart
+                if [[ ${dock_item} =~ ":" ]]; then
+                    #  Get extra-attributes
+                    app_name=$(echo ${dock_item}   | cut -d ':' -f1)
+                    app_atribs=$(echo ${dock_item} | cut -d ':' -f2)
+
+                    if [[ ${app_atribs} =~ "sys" ]]; then
+                        #  System Application
+                        dockutil --add "/System/Applications/${app_name}.app" --no-restart
+                    elif [[ ${app_atribs} =~ "util" ]]; then
+                        #  System Application Utilities
+                        dockutil --add "/System/Applications/Utilities/${app_name}.app" --no-restart
+                    else
+                        dockutil --add "/Applications/${app_name}.app" --no-restart
+                    fi
+                else
+                    dockutil --add "/Applications/${dock_item}.app" --no-restart
+                fi
             fi
         done
 
         #  Add new dock folders
         for dock_item in "${dock_folders[@]}"; do
-            dockutil --add "${dock_item}" --view grid --display folder --sort name --no-restart
+            fldr=$(echo ${dock_item}   | cut -d ':' -f1)
+            order=$(echo ${dock_item} | cut -d ':' -f2)
+            dockutil --add "${fldr}" --view grid --display folder --sort ${order} --no-restart
         done
     fi
 
@@ -104,7 +122,7 @@ function dock_tweaks {
     # defaults write com.apple.dock autohide-delay -float 0
 
     #  Set animation time when hiding/showing the Dock (0=no delay; 1=default; 2=slow)
-    defaults write com.apple.dock autohide-time-modifier -float 2
+    defaults write com.apple.dock autohide-time-modifier -float 1
 
     #  Automatically hide and show the Dock
     defaults write com.apple.dock autohide -bool true
@@ -125,7 +143,7 @@ function dock_tweaks {
     defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
 
     #  Enable the 'reduce transparency' option on Yosemite. Save GPU cycles.
-    defaults write com.apple.universalaccess reduceTransparency -bool true
+    # defaults write com.apple.universalaccess reduceTransparency -bool true
 
     #  Hot corners
     #  Possible values:
@@ -157,6 +175,7 @@ function dock_tweaks {
     defaults write com.apple.dock wvous-br-modifier -int 0
 
     #  Now restart the dock
+    status_msg "0" "Custom Dock tweaks"
     killall Dock
 }
 
@@ -204,7 +223,7 @@ function energy_tweaks {
 
 
 function finder_tweaks {
-    status_msg "0" "Custom Finder tweaks"
+    status_msg "Custom Finder tweaks"
 
     #  Allow quitting via ⌘ + Q; doing so will also hide desktop icons
     defaults write com.apple.finder QuitMenuItem -bool true
@@ -307,11 +326,13 @@ function finder_tweaks {
         OpenWith -bool true \
         Preview -bool false \
         Privileges -bool true
+
+    status_msg "0" "Custom Finder tweaks"
 }
 
 
 function input_device_tweaks {
-    status_msg "0" "Custom Input Devices tweaks"
+    status_msg "Custom Input Devices tweaks"
 
     #
     #  Trackpad
@@ -335,12 +356,12 @@ function input_device_tweaks {
     defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
 
     #  Enable tap to click
-    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-    defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+    # defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+    # defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
 
     #  Enable tap to click in login screen
-    defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-    defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+    # defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+    # defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
     #
     #  Keyboard
@@ -368,11 +389,13 @@ function input_device_tweaks {
 
     #  Disable auto-correct
     defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+    status_msg "0" "Custom Input Devices tweaks"
 }
 
 
 function miscellaneous_tweaks {
-    status_msg "0" "Custom Miscellaneous OS tweaks"
+    status_msg "Custom Miscellaneous OS tweaks"
 
     #  Always show scrollbars
     defaults write NSGlobalDomain AppleShowScrollBars -string "Always"
@@ -398,7 +421,7 @@ function miscellaneous_tweaks {
     sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
     #  Custom message at login window (don't forget to escape special chars!)
-    sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "Hey dude, I'm just chilling\!"
+    sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "Hey man, I'm just chillin\!"
 
     #  Disable Notification Center
     # launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
@@ -418,7 +441,7 @@ function miscellaneous_tweaks {
     defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
     #  Set the timezone; see `sudo systemsetup -listtimezones` for other values
-    sudo systemsetup -settimezone "America/New_York" > /dev/null
+    sudo systemsetup -settimezone "America/Denver" > /dev/null
 
     #  Enable AirDrop over Ethernet and on unsupported Macs running Lion
     defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
@@ -440,11 +463,13 @@ function miscellaneous_tweaks {
     defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
 
     #  Show battery percentage
-    # defaults write com.apple.menuextra.battery ShowPercent -string "YES"
+    defaults write com.apple.menuextra.battery ShowPercent -string "YES"
 
     #  Show clock on menubar
     # defaults write com.apple.menuextra.clock IsAnalog -bool false
-    # defaults write com.apple.menuextra.clock DateFormat "EEE MMM d h:mm a"
+    defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm:ss\"" 
+
+    status_msg "0" "Custom Miscellaneous OS tweaks"
 }
 
 
@@ -455,9 +480,9 @@ function screen_tweaks {
     # sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '/Library/Desktop Pictures/Solid Colors/Solid Aqua Graphite.png'"
 
     #  Copy Background pix and set background image
-    cp -Rn ./files/Backgrounds "${HOME}"
-    sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db \
-        "update data set value = '${HOME}/Backgrounds/68586930-brooklyn-wallpapers.jpg'"
+    # cp -Rn ./files/Backgrounds "${HOME}"
+    # sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db \
+    #     "update data set value = '${HOME}/Backgrounds/68586930-brooklyn-wallpapers.jpg'"
 
     #  Password prompt after sleep or screen saver
     defaults write com.apple.screensaver askForPassword -int 1
