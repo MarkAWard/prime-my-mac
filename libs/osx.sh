@@ -9,37 +9,6 @@
 #  - https://www.learningosx.com/101-ways-to-tweak-os-x-using-terminal/#
 #
 
-
-function app_store_tweaks {
-    #  Enable the WebKit Developer Tools in the Mac App Store
-    # defaults write com.apple.appstore WebKitDeveloperExtras -bool true
-
-    #  Enable Debug Menu in the Mac App Store
-    # defaults write com.apple.appstore ShowDebugMenu -bool true
-
-    #  Enable automatic update check
-    defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-
-    #  Check for software updates daily, not just once per week
-    # defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
-
-    #  Download newly available updates in background
-    # defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
-
-    #  Install System data files & security updates
-    defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
-
-    #  Automatically download apps purchased on other Macs
-    # defaults write com.apple.SoftwareUpdate ConfigDataInstall -int 1
-
-    #  Turn on app auto-update
-    # defaults write com.apple.commerce AutoUpdate -bool true
-
-    #  Allow the App Store to reboot machine on macOS updates
-    # defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
-}
-
-
 function dock_tweaks {
     status_msg "Custom Dock tweaks"
 
@@ -181,7 +150,7 @@ function dock_tweaks {
 
 
 function energy_tweaks {
-    status_msg "0" "Energy savings tweaks"
+    status_msg "Energy savings tweaks"
 
     #  power management (pmset) flags:
     #   -a: all
@@ -219,6 +188,8 @@ function energy_tweaks {
 
     #  Restart automatically if the computer freezes
     sudo systemsetup -setrestartfreeze on
+
+    status_msg "0" "Energy savings tweaks"
 }
 
 
@@ -441,7 +412,7 @@ function miscellaneous_tweaks {
     defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
     #  Set the timezone; see `sudo systemsetup -listtimezones` for other values
-    sudo systemsetup -settimezone "America/Denver" > /dev/null
+    # sudo systemsetup -settimezone "America/Denver" > /dev/null
 
     #  Enable AirDrop over Ethernet and on unsupported Macs running Lion
     defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
@@ -474,7 +445,7 @@ function miscellaneous_tweaks {
 
 
 function screen_tweaks {
-    status_msg "0" "Custom Screen tweaks"
+    status_msg "Custom Screen tweaks"
 
     #  Set background to Aqua Graphite
     # sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '/Library/Desktop Pictures/Solid Colors/Solid Aqua Graphite.png'"
@@ -498,6 +469,8 @@ function screen_tweaks {
 
     #  Enable HiDPI display modes
     sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
+
+    status_msg "0" "Custom Screen tweaks"
 }
 
 
@@ -521,6 +494,8 @@ function security_tweaks {
     #  $> log show --predicate 'subsystem == "com.apple.alf"' --info --last 1h
     #
 
+    status_msg "Security tweaks"
+
     #  Set stealth mode ON
     # /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
     sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1
@@ -542,6 +517,8 @@ function security_tweaks {
     #  Block all incoming traffic (not recommended)
     # /usr/libexec/ApplicationFirewall/socketfilterfw --setblockall on
     # sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 2
+
+    status_msg "0" "Security tweaks"
 }
 
 
@@ -549,7 +526,7 @@ function ssd_tweaks {
     local SSD_ERR_CODE=$(system_profiler SPSerialATADataType | grep Model | grep SSD > /dev/null 2>&1; echo $?)
 
     if [ "$SSD_ERR_CODE" -eq 0 ]; then
-        status_msg "0" "Custom SSD tweaks"
+        status_msg "Custom SSD tweaks"
 
         #  Disable local Time Machine snapshots
         sudo tmutil disablelocal
@@ -566,6 +543,8 @@ function ssd_tweaks {
 
         # Disable the sudden motion sensor as it's not useful for SSDs
         sudo pmset -a sms 0
+
+        status_msg "0" "Custom SSD tweaks"
     else
         status_msg "0" "No SSDs found"
     fi
@@ -573,12 +552,12 @@ function ssd_tweaks {
 
 
 function spotlight_tweaks {
-    status_msg "0" "Custom Spotlight tweaks"
+    status_msg "Custom Spotlight tweaks"
 
     #  Disable Spotlight indexing for any volume that gets mounted and has not yet
     #  been indexed before.
     #  Use `sudo mdutil -i off "/Volumes/foo"` to stop indexing any volume.
-    sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
+    # sudo defaults write /.Spotlight-V100/VolumeConfiguration Exclusions -array "/Volumes"
 
     #  Restart spotlight
     killall mds > /dev/null 2>&1
@@ -588,4 +567,35 @@ function spotlight_tweaks {
 
     #  Rebuild the index from scratch
     sudo mdutil -E / > /dev/null
+
+    status_msg "0" "Custom Spotlight tweaks"
 }
+
+# function app_store_tweaks {
+    #  Enable the WebKit Developer Tools in the Mac App Store
+    # defaults write com.apple.appstore WebKitDeveloperExtras -bool true
+
+    #  Enable Debug Menu in the Mac App Store
+    # defaults write com.apple.appstore ShowDebugMenu -bool true
+
+    #  Enable automatic update check
+    # defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+
+    #  Check for software updates daily, not just once per week
+    # defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
+    #  Download newly available updates in background
+    # defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+
+    #  Install System data files & security updates
+    # defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+
+    #  Automatically download apps purchased on other Macs
+    # defaults write com.apple.SoftwareUpdate ConfigDataInstall -int 1
+
+    #  Turn on app auto-update
+    # defaults write com.apple.commerce AutoUpdate -bool true
+
+    #  Allow the App Store to reboot machine on macOS updates
+    # defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
+# }
