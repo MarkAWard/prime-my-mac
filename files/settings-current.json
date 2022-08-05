@@ -1,0 +1,64 @@
+{
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "editor.fontFamily": "Meslo LG L for Powerline, Menlo, Monaco, 'Courier New', monospace",
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "99"
+    ],
+    "python.linting.flake8Args": [
+        "--max-line-length",
+        "100"
+    ],
+    "python.linting.pylintArgs": [
+        "--max-line-length",
+        "100"
+    ],
+    "python.linting.pylintCategorySeverity.convention": "Hint",
+    "python.linting.pylintEnabled": false,
+    "explorer.confirmDelete": false,
+    "sqltools.format": {
+        "reservedWordCase": "upper"
+    },
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
+    },
+    "json.schemas": [],
+    "yaml.customTags": [
+        "!And",
+        "!And sequence",
+        "!If",
+        "!If sequence",
+        "!Not",
+        "!Not sequence",
+        "!Equals",
+        "!Equals sequence",
+        "!Or",
+        "!Or sequence",
+        "!FindInMap",
+        "!FindInMap sequence",
+        "!Base64",
+        "!Join",
+        "!Join sequence",
+        "!Cidr",
+        "!Ref",
+        "!Sub",
+        "!Sub sequence",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!ImportValue sequence",
+        "!Select",
+        "!Select sequence",
+        "!Split",
+        "!Split sequence"
+    ],
+    "aws.profile": "profile:default",
+    "redhat.telemetry.enabled": false,
+    "docker.commands.runInteractive": "docker run --rm -it -v /Users/mark.ward/projects/datascience:/src/datascience ${exposedPorts} ${tag}",
+    "window.zoomLevel": 1
+}
