@@ -13,7 +13,8 @@ prompt_pyenv() {
     local version
     version=${(@)$(pyenv version)[1]}
     if [[ $version != system ]]; then
-      prompt_segment green $PRIMARY_FG "py-$version"
+      color=cyan
+      prompt_segment $color $PRIMARY_FG "py-$version"
     fi
   fi
 }
