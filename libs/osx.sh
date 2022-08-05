@@ -9,6 +9,12 @@
 #  - https://www.learningosx.com/101-ways-to-tweak-os-x-using-terminal/#
 #
 
+function security_allow_run_all_apps {
+    #  Toggle "Allow Apps downloaded from Anywhere"
+    [ "$1" == true ] && sudo spctl --master-disable || sudo spctl --master-enable
+}
+
+
 function dock_tweaks {
     status_msg "Custom Dock tweaks"
 
@@ -107,6 +113,9 @@ function dock_tweaks {
 
     #  Don't automatically rearrange Spaces based on most recent use
     # defaults write com.apple.dock mru-spaces -bool false
+
+    # Don’t show recent applications in Dock
+    defaults write com.apple.dock show-recents -bool false
 
     #  Disable the Launchpad gesture (pinch with thumb and three fingers)
     defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
@@ -298,6 +307,8 @@ function finder_tweaks {
         Preview -bool false \
         Privileges -bool true
 
+    killall "Finder"
+
     status_msg "0" "Custom Finder tweaks"
 }
 
@@ -322,9 +333,9 @@ function input_device_tweaks {
     #  Disable "natural" (Lion-style) scrolling
     defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 
-    #  Enable moving windows via 3-finger drag
-    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool true
-    defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+    #  Disable moving windows via 3-finger drag
+    defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -bool false
+    defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool false
 
     #  Enable tap to click
     # defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
@@ -438,7 +449,7 @@ function miscellaneous_tweaks {
 
     #  Show clock on menubar
     # defaults write com.apple.menuextra.clock IsAnalog -bool false
-    defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM HH:mm:ss\"" 
+    defaults write com.apple.menuextra.clock "DateFormat" -string "\"EEE d MMM h:mm:ss\"" 
 
     status_msg "0" "Custom Miscellaneous OS tweaks"
 }
@@ -471,12 +482,6 @@ function screen_tweaks {
     sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
 
     status_msg "0" "Custom Screen tweaks"
-}
-
-
-function security_allow_run_all_apps {
-    #  Toggle "Allow Apps downloaded from Anywhere"
-    [ "$1" == true ] && sudo spctl --master-disable || sudo spctl --master-enable
 }
 
 
@@ -528,8 +533,8 @@ function ssd_tweaks {
     if [ "$SSD_ERR_CODE" -eq 0 ]; then
         status_msg "Custom SSD tweaks"
 
-        #  Disable local Time Machine snapshots
-        sudo tmutil disablelocal
+        # Disable local Time Machine backups
+        hash tmutil &> /dev/null && sudo tmutil disablelocal
 
         #  Disable hibernation (speeds up entering sleep mode)
         sudo pmset -a hibernatemode 0
@@ -571,31 +576,36 @@ function spotlight_tweaks {
     status_msg "0" "Custom Spotlight tweaks"
 }
 
-# function app_store_tweaks {
+
+ function app_store_tweaks {
+    status_msg "App Store tweaks"
+
     #  Enable the WebKit Developer Tools in the Mac App Store
-    # defaults write com.apple.appstore WebKitDeveloperExtras -bool true
+    defaults write com.apple.appstore WebKitDeveloperExtras -bool true
 
     #  Enable Debug Menu in the Mac App Store
-    # defaults write com.apple.appstore ShowDebugMenu -bool true
+    defaults write com.apple.appstore ShowDebugMenu -bool true
 
     #  Enable automatic update check
-    # defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+    defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
 
     #  Check for software updates daily, not just once per week
-    # defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+    defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
     #  Download newly available updates in background
-    # defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
+    defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 
     #  Install System data files & security updates
-    # defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
+    defaults write com.apple.SoftwareUpdate CriticalUpdateInstall -int 1
 
     #  Automatically download apps purchased on other Macs
     # defaults write com.apple.SoftwareUpdate ConfigDataInstall -int 1
 
     #  Turn on app auto-update
-    # defaults write com.apple.commerce AutoUpdate -bool true
+    defaults write com.apple.commerce AutoUpdate -bool true
 
     #  Allow the App Store to reboot machine on macOS updates
-    # defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
-# }
+    defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
+
+    status_msg "0" "App Store tweaks"
+ }

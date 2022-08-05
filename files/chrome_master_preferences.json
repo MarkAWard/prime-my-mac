@@ -13,7 +13,8 @@
     "import_history": false,
     "create_all_shortcuts": true,
     "do_not_launch_chrome": true,
-    "make_chrome_default": false
+    "make_chrome_default": true,
+    "make_chrome_default_for_user": true
   },
   "first_run_tabs": []
 }

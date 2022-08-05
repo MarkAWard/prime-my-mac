@@ -48,7 +48,7 @@ else
             --cask)        FG_BREW_CASK=true ;;         #  Brew Cask
             --dot-files)   FG_DOTFILES=true ;;          #  Dot files
             --fonts)       FG_BREW_FONTS=true ;;        #  Brew Fonts
-            --osx-tweaks)  FG_OSX=true ;;               #  OS X
+            --osx)         FG_OSX=true ;;               #  OS X
             --python)      FG_PYTHON=true ;;            #  python
             --prezto)      FG_PREZTO=true ;;            #  prezto
             *)             usage ;;
@@ -81,21 +81,22 @@ if [[ "$FG_ALL" == true || "$FG_OSX" == true ]]; then
     energy_tweaks
     miscellaneous_tweaks
     security_tweaks
+    app_store_tweaks
 fi
 
 #  App specific Customizations
 if [[ "$FG_ALL" == true || "$FG_APPS" == true ]]; then
-    activity_monitor_config
-    electric_sheep_config
-    google_chrome_config
-    iterm2_config
-    itunes_config
-    mail_config
-    messages_config
-    safari_config
-    sublime_text_config
-    terminal_config
+    # activity_monitor_config
+    # google_chrome_config
+    # terminal_config
     vscode_config
+
+    # iterm2_config
+    # itunes_config
+    # mail_config
+    # messages_config
+    # safari_config
+    # sublime_text_config
 fi
 
 #  Set user shell last
