@@ -65,7 +65,7 @@ gittree() {
 #  Serve current directory with Python's simple HTTP server
 serve() {
   local port=${1:-8000}
-  python -m SimpleHTTPServer ${port}
+  python -m http.server ${port}
 }
 
 # cleanup python files
@@ -75,7 +75,7 @@ pyclean () {
 }
 
 #  Aliases -- https://natelandau.com/my-mac-osx-bash_profile/
-function cd() { builtin cd "$@"; ll; }                       # Always list directory contents upon 'cd'
+function cd() { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'
 mcd () { mkdir -p "$1" && cd "$1"; }                # Makes new Dir and jumps inside
 trash () { command mv "$@" ~/.Trash ; }             # Moves a file to the MacOS trash
 ql () { qlmanage -p "$*" >& /dev/null; }            # Opens any file in MacOS Quicklook Preview

@@ -33,7 +33,6 @@ cat << EOF
 
 .: PRIME-MY-MAC :.
 
-I know, that logo was cheesy.... but anyways.
 
 Whenever you are ready, press enter (or Ctrl+C, if you changed your mind) and let the installer run.
 

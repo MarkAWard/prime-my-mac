@@ -48,7 +48,7 @@ alias cp='cp -iv'                                   # Preferred 'cp' implementat
 alias mv='mv -iv'                                   # Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                             # Preferred 'mkdir' implementation
 alias ll='ls -FGlAhp'                               # Preferred 'ls' implementation
-alias xx='exa --long -a --header --grid'            # My exa view
+alias xx='exa --long -a --header'                   # My exa view
 alias less='less -FSRXc'                            # Preferred 'less' implementation
 alias cd..='cd ../'                                 # Go back 1 directory level (for fast typers)
 alias ..='cd ../'                                   # Go back 1 directory level
@@ -71,7 +71,7 @@ alias DT='tee ~/Desktop/terminalOut.txt'            # DT:           Pipe content
 #  colorize!
 alias pgcli="PAGER='grcat ~/.grcat | less -iMSx4FXRe' pgcli"
 
-alias my_ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias myip="curl ipinfo.io/ip; echo"
 
 # New ones!
 alias tf='terraform'

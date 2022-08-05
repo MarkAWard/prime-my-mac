@@ -10,36 +10,34 @@ curl -fsSL https://raw.githubusercontent.com/ifarfan/prime-my-mac/master/bootstr
 # Pre-requisites:
 N.O.N.E.  A.T.   A.L.L.
 
-This is intended to run on a brand new, pristine, virgin Mac.
-
 # What's going on here?!?
 The automated installation pretty much boils down to:
 
-- Install XCode cmdline tools
-- Install package managers: `pip` + `brew`
-- Install `pip` packages
-- Install `brew` and `brew cask` packages, with some `fonts` thrown in for good measure
+- Install `Homebrew` package manager
+- Install `python`
+    - Use `brew` to install `pyenv`
+    - Use `pyenv` to install multiple python3 minor versions, setting 3.9.x as default
+    - `pip` install commonly used packages to the global python version
+        - awscli, black, boto3, black, flake8, pre-commit, ...
+    - `brew` install `pyenv-virtualenv`
+- Install `brew` packages
+    - bash completion, colors, emacs, mac utils, cli tools, ...
+- Tap `homebrew/cask` and install Desktop applications
+    - 1password, dbeaver, docker, iterm2, chrome, rectangle, VS code, ...
+- Tap `homebrew/cask-fonts` and install a bunch of fonts
 - Setting personalized tweaks to some MacOS + GUI apps
-- Copying over my own `.` (dot) + other miscellaneous files
-- Running obscure `default.write.*` commands that control the MacOS look and feel
+    - Running obscure `defaults write` commands that control the MacOS look and feel
+    - Importing some settings/prefences for things like VS Code, iterm2, chrome, ...
+- Install `bash-it` for bash things and `prezto` for zsh things, change shell to `zsh`
+- Copying over a bunch of `.` (dot) + other miscellaneous files
 - And a fair amount of convoluted `Bash` to glue it all together
 
 
 Some things to note:
 
-- The actual list of apps + utilities to install are under `libs\data.sh`
-- Mac tweaks are all under `libs\osx.sh`
-- Specific app tweaks are under `libs\apps.sh`
+- The actual list of apps + utilities to install are under [libs/data.sh](libs/data.sh)
+- Mac tweaks are all under [libs/osx.sh](libs/osx.sh)
+- Specific app tweaks are under [libs/apps.sh](libs/apps.sh)
 - My shell of choice is `prezto` (*zsh*), thus my `.` files reflect that
-- I still install `bashit` for the few times I need to jump back to a `bash` prompt
-- I used to be big on `Sublime Text` but like all the cool kids switched to `VSCode` and couldn't be happier; specially since it's such a breeze to automate its installation
-
-
-# Oh god, why?!?
-When I first switched to the Mac *weltanschauung*, I learned pretty fast the utter folly and sado-masochistic tendencies of those who try to simply **upgrade** their OS by running the installer of whatever new MacOS version Apple releases (which come out on a yearly basis) on top of their existing installation. 
-
-I do Devops and *immutable infrastructure* is basically a religious tenant, so "duh!" I should do the same with my own workstation. Sadly not everything can be *reliably* automated (I'm looking at you both AV + MS-Office) but this is the closest I've come to that promised land. 
-
-The above being said, that *new leather* smell of a newly reformatted disk + fresh OS install on my trusty old Macs, after I run this script, is the greatest feeling. Every now and then `brew` will act up and not install everything it's told so, no worries, just run the script again.
-
-One day when I finally switch to a full-on Linux workstation I'll then be able to simply use *Ansible* to fully provision my box anew each time I need and/or  when it gets replaced. In the interim, this will do for now...
+    - I use `agnoster` theme, prompt customized in [files/dotfiles/zshrc.d/prompt.zsh](files/dotfiles/zshrc.d/prompt.zsh), with `emacs` key bindings
+- I do the code things with `VSCode` and `iterm2`, and a bunch of aliases and git configin
