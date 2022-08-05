@@ -1,0 +1,98 @@
+{
+    "breadcrumbs.enabled": true,
+    "editor.cursorBlinking": "phase",
+    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorStyle": "line",
+    "editor.fontFamily": "Ubuntu Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontLigatures": false,
+    "editor.fontSize": 13,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.insertSpaces": true,
+    "editor.lineHeight": 18,
+    "editor.minimap.enabled": false,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.renderWhitespace": "selection",
+    "editor.rulers": [
+        80,
+        100,
+        120,
+        140
+    ],
+    "editor.scrollBeyondLastLine": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "off",
+    "editor.tabSize": 4,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "files.associations": {
+        "Vagrantfile": "ruby",
+        "*.cnf": "ini",
+        "*.conf": "ini",
+        ".ansible-lint": "yaml",
+        ".yamllint*": "yaml"
+    },
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "material-icon-theme.folders.color": "#fdd835",
+    "python.defaultInterpreterPath": "~/.pyenv/versions/3.9.13/bin/python",
+    "python.linting.flake8Enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "79"
+    ],
+    "python.linting.flake8Args": [
+        "--max-line-length",
+        "80"
+    ],
+    "python.linting.pylintArgs": [
+        "--max-line-length",
+        "80"
+    ],
+    "python.linting.pylintCategorySeverity.convention": "Hint",
+    "python.linting.pylintEnabled": false,
+    "sqltools.format": {
+        "reservedWordCase": "upper"
+    },
+    "terminal.integrated.cwd": "${fileDirname}",
+    "terminal.integrated.fontFamily": "Ubuntu Mono derivative Powerline",
+    "terminal.integrated.fontSize": 16,
+    "textmarker.enableTelemetry": false,
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "window.zoomLevel": 0,
+    "workbench.colorCustomizations": {
+        "editor.selectionBackground": "#7c506f",
+        "editor.selectionHighlightBackground": "#7c506f",
+        "editorError.foreground": "#f57a7a51",
+        "editorWarning.foreground": "#ffe60033",
+        "editorInfo.foreground": "#00ff0088"
+    },
+    "workbench.editor.closeEmptyGroups": false,
+    "workbench.editor.highlightModifiedTabs": true,
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.settings.editor": "json",
+    "workbench.sideBar.location": "left",
+    "workbench.startupEditor": "newUntitledFile",
+    "yaml.customTags": [
+        "!And",
+        "!If",
+        "!Not",
+        "!Equals",
+        "!Or",
+        "!FindInMap sequence",
+        "!Base64",
+        "!Cidr",
+        "!Ref",
+        "!Sub",
+        "!GetAtt",
+        "!GetAZs",
+        "!ImportValue",
+        "!Select",
+        "!Select sequence",
+        "!Split",
+        "!Join sequence"
+    ],
+    "yaml.format.enable": true
+}
