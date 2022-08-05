@@ -365,7 +365,7 @@ declare iterm_bookmark_settings=(
     "Sync Title|integer|0"
     "Tags\":\"0|dict|"
     "Terminal Type|string|xterm-256color"
-    "Transparency|real|0.05"
+    "Transparency|real|0.0"
     "Unlimited Scrollback|integer|1"
     "Use Bold Font|integer|1"
     "Use Bright Bold|integer|1"

@@ -173,10 +173,9 @@ function install_brew_fonts {
 }
 
 function install_prezto {
-    status_msg "1" "prezto"
+    status_msg "prezto"
 
     if [ -d "${HOME}/.zprezto" ]; then
-        status_msg "0" "prezto"
 
         pushd . > /dev/null 2>&1        #  Mark location
         cd "${HOME}/.zprezto" && git fetch --all && git reset --hard origin/master && git submodule update --init --recursive
@@ -191,35 +190,40 @@ function install_prezto {
             ln -s "$rcfile" "${HOME}/.${rcfile##*/}"
         done
         chsh -s /bin/zsh
+
     fi
+
+    status_msg "0" "prezto"
 }
 
 function install_bash_it {
-    status_msg "1" "bash-it"
+    status_msg "bash-it"
 
     if [ -d "${HOME}/.bash_it" ]; then
         bash-it update
     else
+        status_msg "1" "bash-it"
+
         git clone --depth=1 https://github.com/Bash-it/bash-it.git ${HOME}/.bash_it
         ${HOME}/.bash_it/install.sh
     fi
     chsh -s /bin/bash
 
     #  Install Docker autocomplete
-    for d in docker docker-machine docker-compose; do
+    for d in docker docker-compose; do
         ln -s "/Applications/Docker.app/Contents/Resources/etc/${d}.bash-completion" "/usr/local/etc/bash_completion.d/${d}.bash-completion"
     done
+
+    status_msg "0" "bash-it"
 }
 
 
 function install_dotfiles {
-
+    status_msg "Installing dot files"
     #
     #  dircolors
     #
     if [ -f "${HOME}/.dircolors" ]; then
-        status_msg "0" "dircolors"
-
         pushd . > /dev/null 2>&1
         cd "${HOME}/.dircolors-solarized" && git fetch --all && git reset --hard origin/master
         popd > /dev/null 2>&1
@@ -228,13 +232,12 @@ function install_dotfiles {
         git clone --recursive https://github.com/seebi/dircolors-solarized.git ${HOME}/.dircolors-solarized
         ln -s "${HOME}/.dircolors-solarized/dircolors.256dark" "${HOME}/.dircolors"
     fi
+    status_msg "0" "dircolors"
 
     #
     #  colorize
     #
     if [ -d "${HOME}/.grc" ]; then
-        status_msg "0" "colorize"
-
         pushd . > /dev/null 2>&1
         cd "${HOME}/.grc" && git fetch --all && git reset --hard origin/master
         popd > /dev/null 2>&1
@@ -242,25 +245,26 @@ function install_dotfiles {
         status_msg "1" "colorize"
         git clone https://github.com/garabik/grc.git ${HOME}/.grc
     fi
+    status_msg "0" "colorize"
 
     #
     #  git
     #
-    status_msg "0" "Git configs"
     cp -R ./files/git "${HOME}/.git"
     for g_file in ./files/git/.*; do
         gitfile=$(basename ${g_file})
         ln -sf "${HOME}/.git/${gitfile}" "${HOME}/${gitfile}"
     done
+    status_msg "0" "Git configs"
 
     #
     #  Activate .dotfiles
     #
-    status_msg "0" "Dot-files"
     cp -R ./files/dotfiles "${HOME}/.dotfiles"
     for d_file in ./files/dotfiles/.*; do
         dotfile=$(basename ${d_file})
         ln -sf "${HOME}/.dotfiles/${dotfile}" "${HOME}/${dotfile}"
     done
+    status_msg "0" "Dot-files"
 
 }
