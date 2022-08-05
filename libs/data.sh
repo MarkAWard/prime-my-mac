@@ -24,7 +24,6 @@ declare pip_pkgs=(
     flake8                            #  Python linter
     json2yaml                         #  YAML for the win!
     mypy                              #  Python static type checker
-    pre-commit                        #  Pre-commits git hooks
     pygments                          #  File colorization from terminal
     pylint                            #  Python linter
     shyaml                            #  YAML parser
@@ -58,6 +57,7 @@ declare brew_pkgs=(
     kubernetes-cli                    #  Kubernetes CLI
     netcat
     openssl
+    pre-commit                        #  Pre-commits git hooks
     pv                                #  Shell progress bar monitor
     pyenv
     readline
