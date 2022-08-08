@@ -49,6 +49,26 @@ EOF
 }
 
 
+function install_homebrew {
+    #
+    #  http://brew.sh/
+    #
+    local BREW_ERR_CODE=$(command -v brew > /dev/null 2>&1; echo $?)
+    status_msg "$BREW_ERR_CODE" "homebrew"
+    if [ "$BREW_ERR_CODE" -ne 0 ]; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            # On Apple Silicon brew is not placed on the default PATH
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+            brew doctor
+    fi
+
+    #  Copy aggresive .curl file to optimize brew installs
+    cp -n "./files/dotfiles/.curl" "${HOME}/.curl"
+
+
+}
+
 function install_xcode_cli {
     XCODE_ERR_CODE=$(xcode-select -p > /dev/null 2>&1; echo $?)
 
@@ -57,13 +77,19 @@ function install_xcode_cli {
         osascript  -e "display notification \"Installing XCode Command Line Tools...\" with title \"prime-my-mac\"  subtitle \"...\""
 
         #
+        # Homebrew will install xcode if it detects it is missing
+        # https://www.freecodecamp.org/news/install-xcode-command-line-tools/
+        #
+        install_homebrew
+
+        #
         #  Trick "softwareupdate" into assuming that we were installing the CLI tool before and it will attempt to continue
         #  With lots of help from https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh
         #
-        touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-        XCODE_CLT_VER=$(softwareupdate --list | grep "\*.*Command Line" | tail -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
-        softwareupdate --install "$XCODE_CLT_VER" --verbose
-        rm -rf /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+        # touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+        # XCODE_CLT_VER=$(softwareupdate --list | grep "\*.*Command Line" | tail -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
+        # softwareupdate --install "$XCODE_CLT_VER" --verbose
+        # rm -rf /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
     fi
 }
 
