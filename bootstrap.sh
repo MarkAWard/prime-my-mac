@@ -84,3 +84,5 @@ function install {
     install_xcode_cli
     download_and_run_repo
 }
+
+install
