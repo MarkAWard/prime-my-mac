@@ -85,6 +85,11 @@ fi
 TMPPREFIX="${TMPDIR%/}/zsh"
 
 #
+# Homebrew
+#
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+#
 # pyenv
 #
 eval "$(pyenv init --path)"
