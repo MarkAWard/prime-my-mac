@@ -49,6 +49,25 @@ EOF
 }
 
 
+function install_xcode_cli {
+    XCODE_ERR_CODE=$(xcode-select -p > /dev/null 2>&1; echo $?)
+
+    if [ "$XCODE_ERR_CODE" -ne 0 ]; then
+        echo "Installing XCode Command Line Tools..."
+        osascript  -e "display notification \"Installing XCode Command Line Tools...\" with title \"prime-my-mac\"  subtitle \"...\""
+
+        #
+        #  Trick "softwareupdate" into assuming that we were installing the CLI tool before and it will attempt to continue
+        #  With lots of help from https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh
+        #
+        touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+        XCODE_CLT_VER=$(softwareupdate --list | grep "\*.*Command Line" | tail -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
+        softwareupdate --install "$XCODE_CLT_VER" --verbose
+        rm -rf /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+    fi
+}
+
+
 function download_and_run_repo {
     #
     #  Download repo and run install
@@ -62,7 +81,6 @@ function download_and_run_repo {
 
 function install {
     warning_message
+    install_xcode_cli
     download_and_run_repo
 }
-
-install
