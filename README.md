@@ -4,7 +4,7 @@ Automate local, new mac setup and configuration
 # Installation:
 **To bootstrap, on first install:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ifarfan/prime-my-mac/master/bootstrap.sh | bash
+curl -fsSL https://raw.githubusercontent.com/MarkAWard/prime-my-mac/master/bootstrap.sh | bash
 ```
 
 # Pre-requisites:
