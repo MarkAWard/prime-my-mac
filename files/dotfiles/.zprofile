@@ -41,7 +41,9 @@ typeset -gU cdpath fpath mailpath path
 # Set the list of directories that Zsh searches for programs.
 # Include MAN paths by default
 path=(
-  /usr/local/{bin,sbin}
+  $HOME/{,s}bin(N)
+  /opt/{homebrew,local}/{,s}bin(N)
+  /usr/local/{,s}bin(N)
   /usr/local/opt/coreutils/libexec/gnubin
   /usr/local/opt/coreutils/libexec/gnuman
   /usr/local/opt/findutils/libexec/gnubin
@@ -83,11 +85,6 @@ if [[ ! -d "$TMPDIR" ]]; then
 fi
 
 TMPPREFIX="${TMPDIR%/}/zsh"
-
-#
-# Homebrew
-#
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
 #
 # pyenv
