@@ -19,6 +19,10 @@ prompt_pyenv() {
   fi
 }
 
+SHOW_AWS_PROMPT=true
+ZSH_THEME_AWS_PREFIX="☁️  "
+ZSH_THEME_AWS_SUFFIX=" "
+
 AGNOSTER_PROMPT_SEGMENTS=(
   "prompt_status"
 #   "prompt_context"
