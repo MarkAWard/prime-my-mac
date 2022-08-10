@@ -4,17 +4,18 @@ prompt_time() {
   prompt_segment white $PRIMARY_FG ' %* '
 }
 
-prompt_pyenv() {
+prompt_pyenv_conda() {
   if [[ -n $VIRTUAL_ENV ]]; then
     # skip pyenv python if venv set
     return
   fi
-  if [[ -n $PYENV_SHELL ]]; then
+  if [[ -n $CONDA_PROMPT_MODIFIER ]]; then
+      prompt_segment cyan $PRIMARY_FG ${CONDA_PROMPT_MODIFIER//[[:space:]]/}
+  elif [[ -n $PYENV_SHELL ]]; then
     local version
     version=${(@)$(pyenv version)[1]}
     if [[ $version != system ]]; then
-      color=cyan
-      prompt_segment $color $PRIMARY_FG "py-$version"
+      prompt_segment cyan $PRIMARY_FG "py-$version"
     fi
   fi
 }
@@ -28,7 +29,7 @@ AGNOSTER_PROMPT_SEGMENTS=(
 #   "prompt_context"
 #   "prompt_time"
   "prompt_virtualenv"
-  "prompt_pyenv"
+  "prompt_pyenv_conda"
   "prompt_dir"
   "prompt_git"
   "prompt_end"
