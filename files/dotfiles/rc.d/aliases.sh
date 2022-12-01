@@ -48,6 +48,7 @@ alias cp='cp -iv'                                   # Preferred 'cp' implementat
 alias mv='mv -iv'                                   # Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                             # Preferred 'mkdir' implementation
 alias ll='ls -FGlAhp'                               # Preferred 'ls' implementation
+alias diff='diff -W $(( $(tput cols) - 2 ))'        # Preferred 'diff' use full width
 alias xx='exa --long -a --header'                   # My exa view
 alias less='less -FSRXc'                            # Preferred 'less' implementation
 alias cd..='cd ../'                                 # Go back 1 directory level (for fast typers)

@@ -69,9 +69,17 @@ serve() {
 }
 
 # cleanup python files
-pyclean () {
+pyclean() {
         find . -type f -name "*.py[co]" -delete
         find . -type d -name "__pycache__" -delete
+}
+
+exportall () {
+  export $(grep -v '^#' $1 | xargs -0)
+}
+
+unsetall() {
+  unset $(grep -v '^#' $1 | sed -E 's/(.*)=.*/\1/' | xargs)
 }
 
 #  Aliases -- https://natelandau.com/my-mac-osx-bash_profile/
