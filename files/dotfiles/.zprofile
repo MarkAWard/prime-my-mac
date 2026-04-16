@@ -39,24 +39,21 @@ typeset -gU cdpath fpath mailpath path
 # )
 
 # Set the list of directories that Zsh searches for programs.
-# Include MAN paths by default
+# Prepend GNU coreutils/findutils/sed/tar/grep ahead of BSD defaults so
+# `ls`, `find`, `sed`, `tar`, `grep`, `date`, `readlink`, ... resolve to
+# the GNU versions without needing `g`-prefixed aliases.
+HOMEBREW_PREFIX=${HOMEBREW_PREFIX:-/opt/homebrew}
+for _pkg in coreutils findutils gnu-sed gnu-tar grep; do
+  path=($HOMEBREW_PREFIX/opt/$_pkg/libexec/gnubin $path)
+  manpath=($HOMEBREW_PREFIX/opt/$_pkg/libexec/gnuman $manpath)
+done
+path=($HOMEBREW_PREFIX/opt/gnu-getopt/bin $path)
+unset _pkg
+
 path=(
   $HOME/{,s}bin(N)
   /opt/{homebrew,local}/{,s}bin(N)
   /usr/local/{,s}bin(N)
-  /usr/local/opt/coreutils/libexec/gnubin
-  /usr/local/opt/coreutils/libexec/gnuman
-  /usr/local/opt/findutils/libexec/gnubin
-  /usr/local/opt/findutils/libexec/gnuman
-  /usr/local/opt/gnu-getopt/bin
-  /usr/local/opt/gnu-indent/libexec/gnubin
-  /usr/local/opt/gnu-indent/libexec/gnuman
-  /usr/local/opt/gnu-sed/libexec/gnubin
-  /usr/local/opt/gnu-sed/libexec/gnuman
-  /usr/local/opt/gnu-tar/libexec/gnubin
-  /usr/local/opt/gnu-tar/libexec/gnuman
-  /usr/local/opt/grep/libexec/gnubin
-  /usr/local/opt/grep/libexec/gnuman
   $path
 )
 

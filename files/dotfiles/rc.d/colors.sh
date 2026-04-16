@@ -1,22 +1,3 @@
-# dircolors --print-database uses its own built-in database
-# instead of using /etc/DIR_COLORS. try to use the external file
-# first to take advantage of user additions. use internal bash
-# globbing instead of external grep binary.
-
-# Make sure to use GNU versions of utilities are loaded before this file
-if [ -f $HOME/.dotfiles/rc.d/gnuutils.sh ]; then
-    source $HOME/.dotfiles/rc.d/gnuutils.sh
-fi
-
-# enable colors for ls, etc. prefer $HOME/.dir_colors
-if which dircolors &> /dev/null; then
-    if [[ -f $HOME/.dir_colors ]]; then
-        eval $(dircolors -b $HOME/.dir_colors)
-    elif [[ -f /etc/DIR_COLORS ]]; then
-        eval $(dircolors -b /etc/DIR_COLORS)
-    fi
-fi
-
 # enable --color switch for grep commands
 for cmd in grep fgrep egrep; do
     if echo hi |$cmd -q --color=auto hi &> /dev/null; then
