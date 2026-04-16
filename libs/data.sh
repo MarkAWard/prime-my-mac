@@ -16,7 +16,6 @@ declare pyenv_global=3.9.13
 
 #  pip packages
 declare pip_pkgs=(
-    awscli                            #  AWS CLI
     black                             #  Uncompromising code formatter
     boto3                             #  AWS SDK
     bump2version                      #  Code versioning via cmd-line
@@ -27,49 +26,65 @@ declare pip_pkgs=(
     pygments                          #  File colorization from terminal
     pylint                            #  Python linter
     shyaml                            #  YAML parser
-    virtualenv                        #  Virtual environments
 )
 
 #  homebrew packages
 declare brew_pkgs=(
-    bash                              #  Bash 4.x
-    bash-completion
-    bat                               #  cat replacement
-    colordiff                         #  Add to .zprofile
-    coreutils
-    dockutil                          #  Manage the OS X Dock
-    emacs
-    exa                               #  'ls' on steroids
-    findutils                         #  Add to .zprofile
-    fzf                               #  fuzzy finder
-    gh                                #  github cli
-    git
-    git-delta
-    gnu-getopt                        #  Use linux getopt; add to .zprofile
-    gnu-indent                        #  Use linux indent; add to .zprofile
-    gnu-sed                           #  Use linux sed; add to .zprofile
-    gnu-tar                           #  Use linux tar; add to .zprofile
-    grc
-    grep
-    htop
-    jq                                #  JSON parser
-    kubectx                           #  Switch kubernetes context
-    kubernetes-cli                    #  Kubernetes CLI
-    netcat
-    openssl
-    pre-commit                        #  Pre-commits git hooks
-    pv                                #  Shell progress bar monitor
-    pyenv
-    readline
-    sqlite3
-    terminal-notifier                 #  OS X notifications via shell
-    trash                             #  Send deleted files to OSX trash
-    tree
-    watch                             #  Linux "watch" command
-    wget                              #  Linux "wget" command
-    xz
-    yq                                #  YML parser
-    zlib
+    agent-browser                     #  Browser automation CLI for AI agents
+    awscli                            #  AWS CLI
+    bash                              #  Bash 4.x (macOS ships 3.2)
+    bash-completion                   #  Tab completion for bash
+    bat                               #  cat with syntax highlighting
+    colima                            #  Container runtime (Docker Desktop alternative)
+    colordiff                         #  Colorized diff output wrapper
+    coreutils                         #  GNU ls/cp/date/readlink/etc (g-prefixed)
+    devspace                          #  Develop/deploy/debug apps on k8s
+    direnv                            #  Per-directory env loader (sourced in rc.d/direnv.*)
+    dockutil                          #  Script the macOS Dock
+    emacs                             #  Emacs editor
+    eza                               #  Modern ls replacement (maintained fork of exa)
+    findutils                         #  GNU find/xargs (gfind, gxargs)
+    flyway                            #  Database schema migrations
+    fzf                               #  Fuzzy finder
+    gh                                #  GitHub CLI
+    git                               #  Newer git than Apple's bundled version
+    git-delta                         #  Syntax-highlighting pager for git diff
+    gnu-getopt                        #  GNU getopt (long-option parsing for shell scripts)
+    gnu-sed                           #  GNU sed (gsed — portable -i, \s/\b regex)
+    gnu-tar                           #  GNU tar (gtar — --transform, --wildcards)
+    gnupg                             #  GPG — commit signing, encryption
+    go                                #  Go toolchain (GOPATH/GOROOT exported in .zshrc)
+    grc                               #  Generic Colouriser — colorizes command output
+    grep                              #  GNU grep (ggrep — -P perl regex)
+    helm                              #  Kubernetes package manager
+    htop                              #  Interactive process viewer
+    jq                                #  JSON query/filter CLI
+    k9s                               #  Kubernetes cluster TUI
+    kubectx                           #  Switch kubernetes context/namespace
+    kubernetes-cli                    #  kubectl
+    netcat                            #  TCP/UDP swiss-army knife (nc)
+    openssl@3                         #  TLS/crypto lib (pyenv build dep)
+    postgresql@14                     #  Postgres 14 server
+    postgresql@15                     #  Postgres 15 server
+    pinentry-mac                      #  macOS passphrase prompt for GPG
+    pre-commit                        #  Git pre-commit hook framework
+    pv                                #  Pipe viewer — progress bar for shell pipelines
+    pyenv                             #  Python version manager
+    readline                          #  GNU readline line-editing lib (pyenv build dep)
+    redis                             #  Redis server
+    skaffold                          #  Kubernetes dev workflow
+    sqlite                            #  Embedded SQL database (pyenv build dep)
+    stern                             #  Multi-pod kubernetes log tailing
+    terminal-notifier                 #  Send macOS notifications from the shell
+    tmux                              #  Terminal multiplexer (also used by workmux)
+    trash                             #  Move files to macOS Trash instead of rm
+    tree                              #  Recursive directory listing as a tree
+    watch                             #  Re-run a command periodically and display output
+    wget                              #  HTTP downloader (recursive fetch)
+    raine/workmux/workmux             #  Git worktree + tmux workflow tool (custom tap)
+    xz                                #  xz/lzma compression CLI and lib
+    yq                                #  YAML query/filter CLI
+    zlib                              #  Compression library (pyenv build dep)
 )
 
 #  homebrew cask packages
