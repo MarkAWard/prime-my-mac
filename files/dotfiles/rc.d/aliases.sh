@@ -1,14 +1,6 @@
 #  Trick to make aliases available when using sudo
 alias sudo='sudo '
 
-#  Use neovim if available, else fallback to vim
-if which nvim &> /dev/null; then
-    alias vim='nvim -p'
-    alias vi='nvim -p'
-elif which vim &> /dev/null; then
-    alias vi='vim -p'
-fi
-
 #  Display all history
 alias history="cat $HISTFILE"
 
@@ -17,9 +9,6 @@ if which colordiff &> /dev/null; then
     alias diff='colordiff'
 fi
 
-#  Hexdump using od
-alias hd='od -Ax -tx1z -v'
-
 # alias for nice ps output (macos/linux versions)
 if [[ "$(uname)" == "Darwin" ]]; then
     alias psc='ps xao pid,state,user,args'
@@ -27,17 +16,14 @@ elif [[ "$(uname)" == "Linux" ]]; then
     alias psc='ps xawfo pid,state,user,args'
 fi
 
-# alias for using rsync with sudo and ssh
-alias rrsync='rsync --rsync-path sudo\ rsync --recursive --perms --copy-links --verbose --compress --rsh=ssh'
-
 # sum (e.g. echo 1 2 3 |sum)
 alias sum="xargs | tr ' ' '+' | bc"
 
-#  Unalias some git module cmds
-type gs  >/dev/null && unalias gs
-type gls >/dev/null && unalias gls
-type gpt >/dev/null && unalias gpt
-type grc >/dev/null && unalias grc
+#  Unalias some git module cmds (if they exist as aliases)
+alias gs  &>/dev/null && unalias gs
+alias gls &>/dev/null && unalias gls
+alias gpt &>/dev/null && unalias gpt
+alias grc &>/dev/null && unalias grc
 
 #  Use gnu ls + dircolors
 eval `gdircolors ${HOME}/.dircolors`

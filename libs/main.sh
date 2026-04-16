@@ -260,6 +260,8 @@ function install_dotfiles {
     #
     #  Activate .dotfiles
     #
+    # Remove existing .dotfiles directory to ensure clean copy
+    rm -rf "${HOME}/.dotfiles"
     cp -R ./files/dotfiles "${HOME}/.dotfiles"
     for d_file in ./files/dotfiles/.*; do
         dotfile=$(basename ${d_file})

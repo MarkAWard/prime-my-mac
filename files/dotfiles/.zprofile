@@ -85,8 +85,3 @@ if [[ ! -d "$TMPDIR" ]]; then
 fi
 
 TMPPREFIX="${TMPDIR%/}/zsh"
-
-#
-# pyenv
-#
-eval "$(pyenv init --path)"

@@ -4,11 +4,15 @@
 0="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
 0="${${(M)0:#/*}:-$PWD/$0}"
 
+# AWS prompt theme configuration
+SHOW_AWS_PROMPT=true
+ZSH_THEME_AWS_PREFIX="☁️  "
+ZSH_THEME_AWS_SUFFIX=" "
 
 # AWS list profile
 function alp() {
   [[ -r "${AWS_CONFIG_FILE:-$HOME/.aws/config}" ]] || return 1
-  grep --color=never -Eo '\[.*\]' "${AWS_CONFIG_FILE:-$HOME/.aws/config}" | sed -E 's/^[[:space:]]*\[(profile)?[[:space:]]*([-_[:alnum:]\.@]+)\][[:space:]]*$/\2/g'
+  grep --color=never -Eo '\[profile .*\]' "${AWS_CONFIG_FILE:-$HOME/.aws/config}" | sed -E 's/^[[:space:]]*\[(profile)?[[:space:]]*([-_[:alnum:]\.@]+)\][[:space:]]*$/\2/g'
 }
 
 # AWS get profile
@@ -43,7 +47,7 @@ function asp() {
   export AWS_EB_PROFILE=$1
   echo "Switched to AWS Profile: $1"
 
-  echo "Run gimme-aws-creds now?"
+  echo "Run aws-creds now?"
   if [[ $(echo "yes\nno" | fzf --layout=reverse --border --height 5%) == "yes" ]]; then
     aws-creds
   fi
@@ -55,7 +59,7 @@ function aws-creds {
       echo "AWS_PROFILE is not set"
       return 1
     fi
-    gimme-aws-creds --profile $AWS_PROFILE
+    aws sso login --profile $AWS_PROFILE
 }
 
 
@@ -83,6 +87,6 @@ prompt_aws() {
 }
 
 
-if [[ "$SHOW_AWS_PROMPT" != false && "$RPROMPT" != *'$(aws_prompt_info)'* ]]; then
+if [[ "$SHOW_AWS_PROMPT" == true && "$RPROMPT" != *'$(aws_prompt_info)'* ]]; then
   RPROMPT='$(aws_prompt_info)'"$RPROMPT"
 fi
