@@ -20,7 +20,9 @@ function activity_monitor_config {
     defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
     defaults write com.apple.ActivityMonitor SortDirection -int 0
 
-    killall "Activity Monitor"
+    #  `killall` fails loudly on a fresh install where Activity Monitor hasn't
+    #  been launched yet. Swallow the "No matching processes" noise.
+    killall "Activity Monitor" 2>/dev/null || true
 
     status_msg "0" "Custom Activity Monitor.app config"
 }
@@ -107,14 +109,34 @@ function vscode_config {
     status_msg "Custom VSCode.app config"
 
     #  Install extensions into both VS Code and Cursor (each ships its own CLI).
-    #  Cursor pulls from OpenVSX — some Microsoft marketplace IDs aren't available
-    #  there and will silently fail (e.g. eamodio.gitlens).
+    #  Attribute tags on entries in vscode_extensions:
+    #    :v  VS Code only (skip Cursor — usually not on OpenVSX)
+    #    :c  Cursor only  (skip VS Code — usually not on the MS marketplace)
+    #
+    #  Cursor's bundled Node sometimes can't validate the marketplace's cert
+    #  chain ("unable to get local issuer certificate") for a handful of
+    #  extensions. Point it at the homebrew ca-certificates bundle when
+    #  available — VS Code doesn't need this.
+    local cert_bundle
+    cert_bundle="$(brew --prefix 2>/dev/null)/etc/ca-certificates/cert.pem"
+
     for cli in code cursor; do
-        if command -v ${cli} &>/dev/null; then
-            for extension in "${vscode_extensions[@]}"; do
-                ${cli} --install-extension ${extension} --force
-            done
-        fi
+        command -v "${cli}" >/dev/null 2>&1 || continue
+
+        for entry in "${vscode_extensions[@]}"; do
+            local ext="${entry%%:*}"
+            local attrs=""
+            [[ "${entry}" == *:* ]] && attrs="${entry#*:}"
+
+            [[ "${attrs}" == *v* && "${cli}" != "code"   ]] && continue
+            [[ "${attrs}" == *c* && "${cli}" != "cursor" ]] && continue
+
+            if [[ "${cli}" == "cursor" && -f "${cert_bundle}" ]]; then
+                NODE_EXTRA_CA_CERTS="${cert_bundle}" "${cli}" --install-extension "${ext}" --force
+            else
+                "${cli}" --install-extension "${ext}" --force
+            fi
+        done
     done
 
     #  Deploy the same settings file to both VS Code and Cursor

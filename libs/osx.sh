@@ -172,11 +172,11 @@ function energy_tweaks {
     #  Restart after power failure
     sudo pmset -c autorestart 1
 
-    #  Restart automatically if the computer freezes
-    sudo pmset -a panicrestart 15
-
-    #  Restart automatically if the computer freezes
-    sudo systemsetup -setrestartfreeze on
+    #  Restart automatically if the computer freezes.
+    #  Apple Silicon no longer accepts this via systemsetup (managed from
+    #  recoveryOS) — the call returns Error:-99. Suppress so the install
+    #  stays clean on ARM Macs; it still works on Intel.
+    sudo systemsetup -setrestartfreeze on 2>/dev/null || true
 
     status_msg "0" "Energy savings tweaks"
 }
@@ -249,21 +249,31 @@ function finder_tweaks {
     defaults write com.apple.frameworks.diskimages auto-open-rw-root -bool true
     defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 
-    #  Enable snap-to-grid for icons on the desktop and in other icon views
-    /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ${HOME}/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ${HOME}/Library/Preferences/com.apple.finder.plist
+    #  PlistBuddy `Set` fails with "Does Not Exist" when the key path is
+    #  missing — common on fresh installs where Finder hasn't populated every
+    #  view-settings branch yet. Helper tries Set, falls back to Add.
+    local finder_plist="${HOME}/Library/Preferences/com.apple.finder.plist"
+    _finder_plist_set() {
+        local path=$1 type=$2 value=$3
+        /usr/libexec/PlistBuddy -c "Set :${path} ${value}" "${finder_plist}" 2>/dev/null \
+            || /usr/libexec/PlistBuddy -c "Add :${path} ${type} ${value}" "${finder_plist}" 2>/dev/null
+    }
 
-    # Increase grid spacing for icons on the desktop and in other icon views
-    /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:gridSpacing 100" ${HOME}/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:gridSpacing 100" ${HOME}/Library/Preferences/com.apple.finder.plist
+    #  Enable snap-to-grid for icons on the desktop and in other icon views
+    _finder_plist_set "DesktopViewSettings:IconViewSettings:arrangeBy"  string  grid
+    _finder_plist_set "StandardViewSettings:IconViewSettings:arrangeBy" string  grid
+
+    #  Increase grid spacing for icons on the desktop and in other icon views
+    _finder_plist_set "DesktopViewSettings:IconViewSettings:gridSpacing"  integer 100
+    _finder_plist_set "StandardViewSettings:IconViewSettings:gridSpacing" integer 100
 
     #  Set the size of icons on the desktop and in other icon views
-    /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:iconSize 64" ${HOME}/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:iconSize 64" ${HOME}/Library/Preferences/com.apple.finder.plist
+    _finder_plist_set "DesktopViewSettings:IconViewSettings:iconSize"  integer 64
+    _finder_plist_set "StandardViewSettings:IconViewSettings:iconSize" integer 64
 
     #  Set the file/folder font size in list views
-    /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:ExtendedListViewSettings:textSize 14" ${HOME}/Library/Preferences/com.apple.finder.plist
-    /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:ListViewSettings:textSize 14" ${HOME}/Library/Preferences/com.apple.finder.plist
+    _finder_plist_set "StandardViewSettings:ExtendedListViewSettings:textSize" integer 14
+    _finder_plist_set "StandardViewSettings:ListViewSettings:textSize"         integer 14
 
     #  Use list view in all Finder windows by default: `icnv`, `Nlsv`, `clmv`, `Flwv`
     defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
@@ -473,6 +483,31 @@ function security_tweaks {
     sudo "$FW" --setallowsignedapp on > /dev/null
 
     status_msg "0" "Security tweaks"
+}
+
+
+function touchid_sudo_tweaks {
+    #
+    #  Enable Touch ID for sudo. /etc/pam.d/sudo_local is sourced by
+    #  /etc/pam.d/sudo on macOS Sonoma+ and survives OS upgrades — unlike
+    #  editing /etc/pam.d/sudo directly, which gets clobbered on each update.
+    #
+    status_msg "Touch ID for sudo"
+
+    local pam_local=/etc/pam.d/sudo_local
+
+    if sudo grep -qE '^[[:space:]]*auth[[:space:]]+sufficient[[:space:]]+pam_tid\.so' "${pam_local}" 2>/dev/null; then
+        status_msg "0" "Touch ID for sudo (already enabled)"
+        return
+    fi
+
+    sudo tee "${pam_local}" >/dev/null <<'EOF'
+# Managed by prime-my-mac — survives OS updates.
+auth       sufficient     pam_tid.so
+EOF
+    sudo chmod 644 "${pam_local}"
+
+    status_msg "0" "Touch ID for sudo"
 }
 
 

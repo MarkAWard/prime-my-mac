@@ -96,6 +96,7 @@ if [[ "$FG_ALL" == true || "$FG_OSX" == true ]]; then
     energy_tweaks
     miscellaneous_tweaks
     security_tweaks
+    touchid_sudo_tweaks
     app_store_tweaks
 fi
 

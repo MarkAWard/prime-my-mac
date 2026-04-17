@@ -18,6 +18,7 @@ declare pip_pkgs=(
     flake8                            #  Python linter (legacy — ruff covers most of this)
     ipython                           #  Interactive Python REPL
     mypy                              #  Static type checker
+    powerline-status                  #  Powerline status line (sourced by ~/.tmux.conf)
     ruff                              #  Fast linter + formatter (Rust)
 )
 
@@ -116,9 +117,10 @@ declare cask_fonts=(
 
 
 #  Dock Apps
+#  Note: Launchpad.app was removed in macOS Tahoe (26), and
+#  System Preferences.app was renamed to System Settings.app in Ventura (13).
+#  Neither belongs here.
 declare dock_apps=(
-    'Launchpad:sys'
-    '--'
     'Google Chrome'
     'Cursor'
     'iTerm'
@@ -126,7 +128,7 @@ declare dock_apps=(
     'Spotify'
     '--'
     'Activity Monitor:util'
-    'System Preferences:sys'
+    'System Settings:sys'
 )
 
 #  Dock Folders
@@ -136,36 +138,39 @@ declare dock_folders=(
 )
 
 
-#  VS Code extensions
-#  Installed into both VS Code and Cursor.
-#  Note: gitlens is listed twice on purpose — `eamodio.gitlens` exists only on
-#  the VS Code marketplace (Cursor blocks it), while `KylinIdeTeam.gitlens` is
-#  the OpenVSX fork used by Cursor (404 on the VS Code marketplace). Each CLI
-#  silently skips the one it can't resolve, so both editors end up with gitlens.
+#  VS Code extensions — installed into both VS Code and Cursor.
+#
+#  Attributes (`:` suffix, like cask_pkgs):
+#    :v  VS Code only      (not on OpenVSX, or Cursor's Node fails cert on it)
+#    :c  Cursor only       (not on the VS Code marketplace)
+#
+#  Note on gitlens: `KylinIdeTeam.gitlens` is the OpenVSX fork Cursor needs
+#  (not published on the VS Code marketplace). `eamodio.gitlens` installs in
+#  both editors today, so it's left untagged.
 declare vscode_extensions=(
-    'aaron-bond.better-comments'          # Highlight TODO/FIXME/etc. comment styles
-    'charliermarsh.ruff'                  # Ruff formatter + linter (used by [python] config)
-    'christian-kohler.path-intellisense'  # Autocomplete filesystem paths
-    'eamodio.gitlens'                     # Git blame/history inline (VS Code only)
-    'KylinIdeTeam.gitlens'                # GitLens fork on OpenVSX (Cursor only)
-    'fabiospampinato.vscode-diff'         # Diff arbitrary files
-    'hashicorp.terraform'                 # Terraform/HCL language server
-    'ms-azuretools.vscode-docker'         # Docker UI and linting
-    'ms-python.debugpy'                   # Python debugger (required by ms-python.python)
-    'ms-python.python'                    # Python language support
-    'ms-toolsai.jupyter'                  # Jupyter notebooks (+ keymap/renderers deps)
-    'ms-vscode-remote.remote-containers'  # Dev containers
-    'mtxr.sqltools'                       # SQL client + formatter
-    'redhat.vscode-yaml'                  # YAML schema + formatter
-    'ryu1kn.partial-diff'                 # Diff two selections
-    'ryu1kn.text-marker'                  # Persistent text highlights
-    'tamasfe.even-better-toml'            # TOML syntax (pyproject.toml, etc.)
-    'tyriar.sort-lines'                   # Sort selected lines
-    'vscode-icons-team.vscode-icons'      # File/folder icons (matches workbench.iconTheme)
-    'wayou.vscode-todo-highlight'         # Highlight TODO/FIXME keywords
-    'wmaurer.change-case'                 # camelCase/snake_case/etc. conversions
-    'wmiller4.python-venv-switcher'       # Quick pyenv/venv switcher
-    'yzhang.markdown-all-in-one'          # Markdown editing: TOC, shortcuts, preview
+    'aaron-bond.better-comments'           # Highlight TODO/FIXME/etc. comment styles
+    'charliermarsh.ruff'                   # Ruff formatter + linter (used by [python] config)
+    'christian-kohler.path-intellisense'   # Autocomplete filesystem paths
+    'eamodio.gitlens'                      # Git blame/history inline
+    'KylinIdeTeam.gitlens:c'               # GitLens fork on OpenVSX (Cursor only)
+    'fabiospampinato.vscode-diff:v'        # Diff arbitrary files (not on OpenVSX)
+    'hashicorp.terraform'                  # Terraform/HCL language server
+    'ms-azuretools.vscode-docker'          # Docker UI and linting
+    'ms-python.debugpy'                    # Python debugger (required by ms-python.python)
+    'ms-python.python'                     # Python language support
+    'ms-toolsai.jupyter'                   # Jupyter notebooks (+ keymap/renderers deps)
+    'ms-vscode-remote.remote-containers'   # Dev containers
+    'mtxr.sqltools'                        # SQL client + formatter
+    'redhat.vscode-yaml'                   # YAML schema + formatter
+    'ryu1kn.partial-diff'                  # Diff two selections
+    'ryu1kn.text-marker:v'                 # Persistent text highlights (not on OpenVSX)
+    'tamasfe.even-better-toml'             # TOML syntax (pyproject.toml, etc.)
+    'tyriar.sort-lines'                    # Sort selected lines
+    'vscode-icons-team.vscode-icons'       # File/folder icons (matches workbench.iconTheme)
+    'wayou.vscode-todo-highlight'          # Highlight TODO/FIXME keywords
+    'wmaurer.change-case'                  # camelCase/snake_case/etc. conversions
+    'wmiller4.python-venv-switcher:v'      # Quick pyenv/venv switcher (not on OpenVSX)
+    'yzhang.markdown-all-in-one'           # Markdown editing: TOC, shortcuts, preview
 )
 
 

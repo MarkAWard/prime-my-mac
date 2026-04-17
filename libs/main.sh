@@ -260,9 +260,11 @@ function install_bash_it {
         #  and skips the interactive prompt that would otherwise hang --all runs.
         ${HOME}/.bash_it/install.sh --silent
     fi
-    chsh -s /bin/bash
 
-    status_msg "0" "bash-it"
+    #  Don't flip the login shell — zsh (set by install_prezto) stays default.
+    #  bash-it is available when the user opens a bash session explicitly; if
+    #  they want bash as the login shell, they can run:  chsh -s /bin/bash
+    status_msg "0" "bash-it (login shell unchanged; run 'chsh -s /bin/bash' to switch)"
 }
 
 
