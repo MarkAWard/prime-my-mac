@@ -41,7 +41,13 @@ prompt_short_dir() {
     pwd=$short_path
   fi
 
-  prompt_segment blue $PRIMARY_FG " %B$pwd%b "
+  #  Use 256-color codes so the path segment renders identically regardless
+  #  of which ANSI palette the terminal applies and whether "draw bold in
+  #  bright colors" is enabled (that feature only rewrites ANSI 0-7, so any
+  #  16-255 code sidesteps it).
+  #    39 = bright sky blue (#00afff)
+  #    16 = pure black
+  prompt_segment 39 16 " %B$pwd%b "
 }
 
 AGNOSTER_PROMPT_SEGMENTS=(
