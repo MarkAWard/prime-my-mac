@@ -308,7 +308,9 @@ function install_dotfiles {
     # Remove existing .dotfiles directory to ensure clean copy
     rm -rf "${HOME}/.dotfiles"
     cp -R ./files/dotfiles "${HOME}/.dotfiles"
-    for d_file in ./files/dotfiles/.*; do
+    #  .[!.]* matches .<anything-but-dot>* — skips `.` and `..` that plain
+    #  `.*` expands to (which caused noisy `ln: ...: Resource busy` errors)
+    for d_file in ./files/dotfiles/.[!.]*; do
         dotfile=$(basename ${d_file})
         ln -sf "${HOME}/.dotfiles/${dotfile}" "${HOME}/${dotfile}"
     done
