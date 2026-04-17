@@ -22,13 +22,9 @@ export HOMEBREW_VERBOSE=0
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 
-#  Determine if it's a laptop
+#  Determine if it's a laptop (used by install_brew_cask for :l attribute)
 #  SEE: http://arstechnica.com/civis/viewtopic.php?f=19&t=1118530
 [[ "$(sysctl -n hw.model | grep -q -i book; echo $?)" -eq 0 ]] && IS_LAPTOP=true || IS_LAPTOP=false
-
-#  Determine OS minor version
-#  SEE: https://coderwall.com/p/4yz8dq/determine-os-x-version-from-the-command-line
-OS_MINOR=$(defaults read loginwindow SystemVersionStampAsString | cut -d'.' -f2)
 
 function status_msg {
     #
@@ -68,7 +64,15 @@ function install_homebrew {
     #
     local BREW_ERR_CODE=$(command -v brew > /dev/null 2>&1; echo $?)
     status_msg "$BREW_ERR_CODE" "homebrew"
-    [ "$BREW_ERR_CODE" -ne 0 ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    if [ "$BREW_ERR_CODE" -ne 0 ]; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        #  On Apple Silicon brew installs to /opt/homebrew and isn't on PATH
+        if [ -x /opt/homebrew/bin/brew ]; then
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "${HOME}/.zprofile"
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+    fi
 }
 
 
@@ -142,7 +146,6 @@ function install_node {
 
 function install_brew {
     install_homebrew
-    git -C $(brew --repository homebrew/core) checkout master
 
     #  Install packages
     status_msg "Installing brew packages"
@@ -156,9 +159,8 @@ function install_brew {
 function install_brew_cask {
     install_homebrew
 
-    #  Install cask packages
-    brew tap homebrew/cask
-    git -C $(brew --repository homebrew/cask) checkout master
+    #  Install cask packages (homebrew-cask is bundled into core since 2019;
+    #  no explicit `brew tap` needed)
     status_msg "Installing cask packages"
     for pkg in "${cask_pkgs[@]}"; do
 
@@ -208,13 +210,9 @@ function install_github_auth {
 function install_brew_fonts {
     install_homebrew
 
+    #  homebrew/cask-fonts was merged into homebrew-cask core in 2024; font
+    #  casks live under the main `font-*` names and install cleanly via http.
     status_msg "Installing cask fonts"
-
-    #  A few fonts still run under svn
-    brew install svn
-
-    #  Install cask fonts
-    brew tap homebrew/cask-fonts
     for font in "${cask_fonts[@]}"; do
         brew install --cask font-$font
     done
@@ -232,14 +230,11 @@ function install_prezto {
     else
         status_msg "1" "prezto"
 
-        #  Install prezto + change shell to zsh
+        #  Install prezto + change shell to zsh. install_dotfiles will
+        #  overwrite the z* runcoms afterwards with the repo's own copies,
+        #  so no need to pre-symlink prezto's defaults here.
         git clone --recursive https://github.com/sorin-ionescu/prezto.git ${HOME}/.zprezto
-        rcfiles=(${HOME}/.zprezto/runcoms/z*)
-        for rcfile in "${rcfiles[@]}"; do
-            ln -s "$rcfile" "${HOME}/.${rcfile##*/}"
-        done
         chsh -s /bin/zsh
-
     fi
 
     status_msg "0" "prezto"
@@ -257,11 +252,6 @@ function install_bash_it {
         ${HOME}/.bash_it/install.sh
     fi
     chsh -s /bin/bash
-
-    #  Install Docker autocomplete
-    for d in docker docker-compose; do
-        ln -s "/Applications/Docker.app/Contents/Resources/etc/${d}.bash-completion" "/usr/local/etc/bash_completion.d/${d}.bash-completion"
-    done
 
     status_msg "0" "bash-it"
 }

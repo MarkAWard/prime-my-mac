@@ -3,10 +3,21 @@
 #
 #  I N S T A L L . S H
 #
-#  Install OSX tools + customizations:
-#  - pip
-#  - homebrew + cask + fonts
-#  - prezto + bash-it
+#  Dispatches individual install_* / *_tweaks / *_config functions based
+#  on flags. Each flag corresponds to a chunk of the bootstrap:
+#
+#    --python     pyenv + python versions + pip packages
+#    --node       nvm + Node LTS
+#    --brew       Homebrew formulae (libs/data.sh brew_pkgs)
+#    --cask       Homebrew casks (libs/data.sh cask_pkgs)
+#    --fonts      Homebrew cask fonts (libs/data.sh cask_fonts)
+#    --github     `gh auth login` + git credential helper
+#    --osx        defaults-write tweaks for dock/finder/etc.
+#    --app-configs  per-app configs (vscode/iterm2/etc.)
+#    --prezto     install prezto (zsh framework)
+#    --bash-it    install bash-it (bash framework)
+#    --dot-files  stage dotfiles at ~/.dotfiles and ~/.config/git/
+#    --all        run everything above in a sensible order
 #
 
 

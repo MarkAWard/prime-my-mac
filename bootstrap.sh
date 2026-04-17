@@ -9,7 +9,7 @@
 #  Download repo and run install
 #
 #  To install:
-#  curl -fsSL https://github.com/markaward/prime-my-mac/bootstrap.sh | bash
+#  curl -fsSL https://raw.githubusercontent.com/markaward/prime-my-mac/master/bootstrap.sh | bash
 #
 #  Original source from https://github.com/ifarfan/prime-my-mac
 
@@ -51,22 +51,21 @@ EOF
 
 function install_homebrew {
     #
-    #  http://brew.sh/
+    #  Bootstrap Homebrew on a virgin Mac. Runs before libs/ are sourced,
+    #  so it can't depend on helpers like status_msg. Triggers the Xcode
+    #  Command Line Tools installer as a side effect, which gives us git
+    #  for the clone step below.
     #
-    local BREW_ERR_CODE=$(command -v brew > /dev/null 2>&1; echo $?)
-    status_msg "$BREW_ERR_CODE" "homebrew"
-    if [ "$BREW_ERR_CODE" -ne 0 ]; then
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            # On Apple Silicon brew is not placed on the default PATH
-            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+    if ! command -v brew > /dev/null 2>&1; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+        # On Apple Silicon brew installs to /opt/homebrew and isn't on PATH
+        if [ -x /opt/homebrew/bin/brew ]; then
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "${HOME}/.zprofile"
             eval "$(/opt/homebrew/bin/brew shellenv)"
-            brew doctor
+        fi
+        brew doctor
     fi
-
-    #  Copy aggresive .curl file to optimize brew installs
-    cp -n "./files/dotfiles/.curl" "${HOME}/.curl"
-
-
 }
 
 function install_xcode_cli {
@@ -100,8 +99,14 @@ function download_and_run_repo {
     #
     osascript  -e "display notification \"Downloading git repo and running install...\" with title \"prime-my-mac\"  subtitle \"...\""
 
-    [[ -d "$TMP_DIR" ]] && cd $TMP_DIR && git pull > /dev/null 2>&1 || git clone ${GIT_REPO} $TMP_DIR/
-    cd $TMP_DIR && ./install.sh --all
+    if [ -d "$TMP_DIR/.git" ]; then
+        cd "$TMP_DIR" && git pull > /dev/null 2>&1
+    else
+        rm -rf "$TMP_DIR"
+        git clone "$GIT_REPO" "$TMP_DIR"
+    fi
+
+    cd "$TMP_DIR" && ./install.sh --all
 }
 
 
