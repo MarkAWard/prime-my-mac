@@ -86,15 +86,14 @@ declare brew_pkgs=(
 #  :l == laptop-only, :u == "Utilities" folder-only
 declare cask_pkgs=(
     1password
+    cursor
     dbeaver-community
     docker
     google-chrome
     iterm2
-    lens
     postman
     rectangle
     spotify
-    temurin
     visual-studio-code
 )
 
@@ -114,10 +113,9 @@ declare cask_fonts=(
 #  Dock Apps
 declare dock_apps=(
     'Launchpad:sys'
-    'Calculator:sys'
     '--'
     'Google Chrome'
-    'Visual Studio Code'
+    'Cursor'
     'iTerm'
     'DBeaver'
     'Spotify'
@@ -130,33 +128,39 @@ declare dock_apps=(
 ## FolderName:sort-order
 declare dock_folders=(
     '~/Downloads:dateadded'
-    '/Applications:name'
 )
 
 
 #  VS Code extensions
+#  Installed into both VS Code and Cursor.
+#  Note: gitlens is listed twice on purpose — `eamodio.gitlens` exists only on
+#  the VS Code marketplace (Cursor blocks it), while `KylinIdeTeam.gitlens` is
+#  the OpenVSX fork used by Cursor (404 on the VS Code marketplace). Each CLI
+#  silently skips the one it can't resolve, so both editors end up with gitlens.
 declare vscode_extensions=(
-    'aaron-bond.better-comments'
-    'bungcip.better-toml'
-    'christian-kohler.path-intellisense'
-    'eamodio.gitlens'
-    'fabiospampinato.vscode-diff'
-    'hashicorp.terraform'
-    'ms-azuretools.vscode-docker'
-    'ms-python.python'
-    'ms-toolsai.jupyter'
-    'ms-vscode-remote.remote-containers'
-    'mtxr.sqltools'
-    'pkief.material-icon-theme'
-    'redhat.vscode-yaml'
-    'ryu1kn.partial-diff'
-    'ryu1kn.text-marker'
-    'shd101wyy.markdown-preview-enhanced'
-    'tyriar.sort-lines'
-    'VisualStudioExptTeam.vscodeintellicode'
-    'vscode-icons-team.vscode-icons'
-    'wayou.vscode-todo-highlight'
-    'wmaurer.change-case'
+    'aaron-bond.better-comments'          # Highlight TODO/FIXME/etc. comment styles
+    'charliermarsh.ruff'                  # Ruff formatter + linter (used by [python] config)
+    'christian-kohler.path-intellisense'  # Autocomplete filesystem paths
+    'eamodio.gitlens'                     # Git blame/history inline (VS Code only)
+    'KylinIdeTeam.gitlens'                # GitLens fork on OpenVSX (Cursor only)
+    'fabiospampinato.vscode-diff'         # Diff arbitrary files
+    'hashicorp.terraform'                 # Terraform/HCL language server
+    'ms-azuretools.vscode-docker'         # Docker UI and linting
+    'ms-python.debugpy'                   # Python debugger (required by ms-python.python)
+    'ms-python.python'                    # Python language support
+    'ms-toolsai.jupyter'                  # Jupyter notebooks (+ keymap/renderers deps)
+    'ms-vscode-remote.remote-containers'  # Dev containers
+    'mtxr.sqltools'                       # SQL client + formatter
+    'redhat.vscode-yaml'                  # YAML schema + formatter
+    'ryu1kn.partial-diff'                 # Diff two selections
+    'ryu1kn.text-marker'                  # Persistent text highlights
+    'tamasfe.even-better-toml'            # TOML syntax (pyproject.toml, etc.)
+    'tyriar.sort-lines'                   # Sort selected lines
+    'vscode-icons-team.vscode-icons'      # File/folder icons (matches workbench.iconTheme)
+    'wayou.vscode-todo-highlight'         # Highlight TODO/FIXME keywords
+    'wmaurer.change-case'                 # camelCase/snake_case/etc. conversions
+    'wmiller4.python-venv-switcher'       # Quick pyenv/venv switcher
+    'yzhang.markdown-all-in-one'          # Markdown editing: TOC, shortcuts, preview
 )
 
 

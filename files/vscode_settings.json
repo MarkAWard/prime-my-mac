@@ -1,13 +1,15 @@
 {
     "breadcrumbs.enabled": true,
+    "editor.accessibilitySupport": "off",
     "editor.cursorBlinking": "phase",
-    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorSmoothCaretAnimation": "on",
     "editor.cursorStyle": "line",
     "editor.fontFamily": "JetBrainsMono Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": false,
     "editor.fontSize": 13,
     "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "file",
+    "editor.inlineSuggest.enabled": true,
     "editor.insertSpaces": true,
     "editor.lineHeight": 18,
     "editor.minimap.enabled": false,
@@ -25,42 +27,39 @@
     "editor.tabSize": 4,
     "explorer.confirmDelete": false,
     "explorer.confirmDragAndDrop": false,
+    "explorer.openEditors.sortOrder": "editorOrder",
+    "explorer.openEditors.minVisible": 0,
     "files.associations": {
         "Vagrantfile": "ruby",
         "*.cnf": "ini",
         "*.conf": "ini",
         ".ansible-lint": "yaml",
-        ".yamllint*": "yaml"
+        ".yamllint*": "yaml",
+        "*.sql": "sql",
+        "*.yml": "yaml"
     },
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
+    "jupyter.askForKernelRestart": false,
+    "jupyter.runStartupCommands": "%load_ext autoreload\n%autoreload 2",
     "material-icon-theme.folders.color": "#fdd835",
-    "python.defaultInterpreterPath": "~/.pyenv/versions/3.9.13/bin/python",
-    "python.linting.flake8Enabled": true,
-    "python.linting.lintOnSave": true,
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
-        "--line-length",
-        "79"
-    ],
-    "python.linting.flake8Args": [
-        "--max-line-length",
-        "80"
-    ],
-    "python.linting.pylintArgs": [
-        "--max-line-length",
-        "80"
-    ],
-    "python.linting.pylintCategorySeverity.convention": "Hint",
-    "python.linting.pylintEnabled": false,
+    "notebook.formatOnSave.enabled": true,
+    "notebook.output.textLineLimit": 60,
+    "python.terminal.activateEnvironment": false,
+    "python.testing.pytestEnabled": true,
     "sqltools.format": {
-        "reservedWordCase": "upper"
+        "reservedWordCase": "upper",
+        "language": "sql"
     },
+    "sqltools.queryParams.enableReplace": true,
+    "terminal.explorerKind": "external",
+    "terminal.external.osxExec": "iTerm.app",
     "terminal.integrated.cwd": "${fileDirname}",
+    "terminal.integrated.defaultProfile.osx": "zsh",
     "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font Mono",
     "terminal.integrated.fontSize": 16,
+    "terminal.integrated.shellIntegration.enabled": true,
     "textmarker.enableTelemetry": false,
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "window.zoomLevel": 0,
     "workbench.colorCustomizations": {
         "editor.selectionBackground": "#7c506f",
@@ -75,6 +74,7 @@
     "workbench.settings.editor": "json",
     "workbench.sideBar.location": "left",
     "workbench.startupEditor": "newUntitledFile",
+    "vsicons.dontShowNewVersionMessage": true,
     "yaml.customTags": [
         "!And",
         "!If",
@@ -94,5 +94,49 @@
         "!Split",
         "!Join sequence"
     ],
-    "yaml.format.enable": true
+    "yaml.format.enable": true,
+    "claudeCode.preferredLocation": "panel",
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll": "explicit",
+            "source.organizeImports": "explicit"
+        },
+        "editor.wordBasedSuggestions": "off",
+        "gitlens.codeLens.symbolScopes": [
+            "!Module"
+        ]
+    },
+    "[sql]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "mtxr.sqltools"
+    },
+    "[yaml]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "diffEditor.ignoreTrimWhitespace": false,
+        "gitlens.codeLens.scopes": [
+            "document"
+        ],
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        }
+    },
+    "[terraform]": {
+        "editor.indentSize": 2
+    },
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    }
 }

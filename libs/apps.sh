@@ -115,15 +115,22 @@ function iterm2_config {
 function vscode_config {
     status_msg "Custom VSCode.app config"
 
-    #  Install extensions
-    for extension in "${vscode_extensions[@]}"; do
-        code --install-extension ${extension} --force
+    #  Install extensions into both VS Code and Cursor (each ships its own CLI).
+    #  Cursor pulls from OpenVSX — some Microsoft marketplace IDs aren't available
+    #  there and will silently fail (e.g. eamodio.gitlens).
+    for cli in code cursor; do
+        if command -v ${cli} &>/dev/null; then
+            for extension in "${vscode_extensions[@]}"; do
+                ${cli} --install-extension ${extension} --force
+            done
+        fi
     done
 
-    #  Copy + symlink config file
-    cp -n ./files/vscode_settings.json "${HOME}/Library/Application Support/Code/User/settings.json"
-    mkdir -p "${HOME}/.vscode"
-    ln -sf "${HOME}/Library/Application\ Support/Code/User/settings.json" "${HOME}/.vscode/settings.json"
+    #  Deploy the same settings file to both VS Code and Cursor
+    for app in "Code" "Cursor"; do
+        local dest="${HOME}/Library/Application Support/${app}/User/settings.json"
+        [ -d "$(dirname "${dest}")" ] && cp ./files/vscode_settings.json "${dest}"
+    done
 
     status_msg "0" "Custom VSCode.app config"
 }
