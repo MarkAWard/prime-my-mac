@@ -61,9 +61,6 @@ sudo -v
 while true; do
     sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-#  Enable "All Apps" install
-security_allow_run_all_apps true
-
 #  Install components
 [[ "$FG_ALL" == true || "$FG_PYTHON" == true ]]     && install_python
 [[ "$FG_ALL" == true || "$FG_BREW" == true ]]       && install_brew

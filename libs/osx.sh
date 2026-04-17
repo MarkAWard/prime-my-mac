@@ -9,12 +9,6 @@
 #  - https://www.learningosx.com/101-ways-to-tweak-os-x-using-terminal/#
 #
 
-function security_allow_run_all_apps {
-    #  Toggle "Allow Apps downloaded from Anywhere"
-    [ "$1" == true ] && sudo spctl --master-disable || sudo spctl --master-enable
-}
-
-
 function dock_tweaks {
     status_msg "Custom Dock tweaks"
 
@@ -105,12 +99,6 @@ function dock_tweaks {
     #  Make Dock icons of hidden applications translucent
     defaults write com.apple.dock showhidden -bool true
 
-    #  Disable Dashboard
-    defaults write com.apple.dashboard mcx-disabled -bool true
-
-    #  Don't show Dashboard as a Space
-    defaults write com.apple.dock dashboard-in-overlay -bool true
-
     #  Don't automatically rearrange Spaces based on most recent use
     # defaults write com.apple.dock mru-spaces -bool false
 
@@ -131,26 +119,18 @@ function dock_tweaks {
     #   4: Desktop
     #   5: Start screen saver
     #   6: Disable screen saver
-    #   7: Dashboard
     #  10: Put display to sleep
     #  11: Launchpad
     #  12: Notification Center
+    #  13: Lock Screen
 
-    #  Top left screen corner → Put display to sleep
-    # defaults write com.apple.dock wvous-tl-corner -int 10
-    # defaults write com.apple.dock wvous-tl-modifier -int 0
+    #  Top left screen corner → Lock Screen
+    defaults write com.apple.dock wvous-tl-corner -int 13
+    defaults write com.apple.dock wvous-tl-modifier -int 0
 
-    #  Top right screen corner → Desktop
-    defaults write com.apple.dock wvous-tr-corner -int 4
+    #  Top right screen corner → Put display to sleep
+    defaults write com.apple.dock wvous-tr-corner -int 10
     defaults write com.apple.dock wvous-tr-modifier -int 0
-
-    #  Bottom left screen corner → Screensaver
-    defaults write com.apple.dock wvous-bl-corner -int 5
-    defaults write com.apple.dock wvous-bl-modifier -int 0
-
-    #  Bottom right screen corner → Mission Control
-    defaults write com.apple.dock wvous-br-corner -int 2
-    defaults write com.apple.dock wvous-br-modifier -int 0
 
     #  Now restart the dock
     status_msg "0" "Custom Dock tweaks"
@@ -363,12 +343,6 @@ function input_device_tweaks {
     # defaults write NSGlobalDomain InitialKeyRepeat -int 20
     # defaults write NSGlobalDomain KeyRepeat -int 1
 
-    #  Automatically illuminate built-in MacBook keyboard in low light
-    defaults write com.apple.BezelServices kDim -bool true
-
-    #  Turn off keyboard illumination when computer is not used for 5 minutes
-    defaults write com.apple.BezelServices kDimTime -int 300
-
     #  Disable auto-correct
     defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
@@ -402,9 +376,6 @@ function miscellaneous_tweaks {
     #  Reveal IP address, hostname, OS version, etc. when clicking the clock in the login window
     sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
-    #  Custom message at login window (don't forget to escape special chars!)
-    sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText "Hey man, I'm just chillin\!"
-
     #  Disable Notification Center
     # launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
     #  To re-enable, run:
@@ -412,9 +383,6 @@ function miscellaneous_tweaks {
 
     #  Change banner display time (in secs) in Notification Center
     defaults write com.apple.notificationcenterui bannerTime 3
-
-    #  Disable game center
-    launchctl unload /System/Library/LaunchAgents/com.apple.gamed.plist 2> /dev/null
 
     #  Disable smart quotes when typing
     defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
@@ -440,9 +408,6 @@ function miscellaneous_tweaks {
 
     #  Make crash reporter appear as a notification
     defaults write com.apple.CrashReporter UseUNC 1
-
-    #  Increase sound quality for Bluetooth headphones/headsets
-    defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
 
     #  Show battery percentage
     defaults write com.apple.menuextra.battery ShowPercent -string "YES"
@@ -487,41 +452,25 @@ function screen_tweaks {
 
 function security_tweaks {
     #
-    #  Firewall
+    #  Application Firewall — macOS ships this disabled by default. Turning
+    #  it on (plus stealth mode) is useful on a laptop that moves between
+    #  networks. Since Ventura the documented path is `socketfilterfw`;
+    #  writing to /Library/Preferences/com.apple.alf directly is no longer
+    #  reliably honored.
     #
-    #  See:
-    #  - http://krypted.com/mac-security/command-line-firewall-management-in-os-x-10-10/
-    #  - https://coderwall.com/p/zt8aqa/disable-mac-osx-firewall-from-command-line
-    #
-    #  To check log config:
-    #  $> sudo log config --status --subsystem com.apple.alf
-    #  To view log output:
-    #  $> log show --predicate 'subsystem == "com.apple.alf"' --info --last 1h
-    #
+    local FW=/usr/libexec/ApplicationFirewall/socketfilterfw
 
     status_msg "Security tweaks"
 
-    #  Set stealth mode ON
-    # /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on
-    sudo defaults write /Library/Preferences/com.apple.alf stealthenabled -int 1
+    #  Enable the firewall
+    sudo "$FW" --setglobalstate on > /dev/null
 
-    #  Set logging ON: throttled:0, brief:1 or detail:2
-    # /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingopt brief
-    # /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
-    sudo defaults write /Library/Preferences/com.apple.alf loggingoption  -int 1
-    sudo defaults write /Library/Preferences/com.apple.alf loggingenabled -int 1
+    #  Stealth mode: don't respond to ICMP/port probes from unknown hosts
+    sudo "$FW" --setstealthmode on > /dev/null
 
-    #  Allow signed OSX Apps
-    # /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned on
-    sudo defaults write /Library/Preferences/com.apple.alf allowsignedenabled -int 1
-
-    #  Start firewall!
-    # /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-    sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 1
-
-    #  Block all incoming traffic (not recommended)
-    # /usr/libexec/ApplicationFirewall/socketfilterfw --setblockall on
-    # sudo defaults write /Library/Preferences/com.apple.alf globalstate -int 2
+    #  Auto-allow signed apps so legitimate software doesn't prompt on every launch
+    sudo "$FW" --setallowsigned on > /dev/null
+    sudo "$FW" --setallowsignedapp on > /dev/null
 
     status_msg "0" "Security tweaks"
 }
@@ -533,20 +482,10 @@ function ssd_tweaks {
     if [ "$SSD_ERR_CODE" -eq 0 ]; then
         status_msg "Custom SSD tweaks"
 
-        # Disable local Time Machine backups
-        hash tmutil &> /dev/null && sudo tmutil disablelocal
-
         #  Disable hibernation (speeds up entering sleep mode)
         sudo pmset -a hibernatemode 0
 
-        #  Remove the sleep image file to save disk space
-        sudo rm /Private/var/vm/sleepimage
-
-        #  Create a zero-byte file instead and make sure it can't be rewritten
-        sudo touch /Private/var/vm/sleepimage
-        sudo chflags uchg /Private/var/vm/sleepimage
-
-        # Disable the sudden motion sensor as it's not useful for SSDs
+        #  Disable the sudden motion sensor — not useful for SSDs
         sudo pmset -a sms 0
 
         status_msg "0" "Custom SSD tweaks"
@@ -569,9 +508,6 @@ function spotlight_tweaks {
 
     #  Make sure indexing is enabled for the main volume
     sudo mdutil -i on / > /dev/null
-
-    #  Rebuild the index from scratch
-    sudo mdutil -E / > /dev/null
 
     status_msg "0" "Custom Spotlight tweaks"
 }
