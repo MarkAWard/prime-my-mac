@@ -3,7 +3,7 @@
     "editor.cursorBlinking": "phase",
     "editor.cursorSmoothCaretAnimation": true,
     "editor.cursorStyle": "line",
-    "editor.fontFamily": "Ubuntu Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontFamily": "JetBrainsMono Nerd Font Mono, Menlo, Monaco, 'Courier New', monospace",
     "editor.fontLigatures": false,
     "editor.fontSize": 13,
     "editor.formatOnSave": true,
@@ -57,7 +57,7 @@
         "reservedWordCase": "upper"
     },
     "terminal.integrated.cwd": "${fileDirname}",
-    "terminal.integrated.fontFamily": "Ubuntu Mono derivative Powerline",
+    "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font Mono",
     "terminal.integrated.fontSize": 16,
     "textmarker.enableTelemetry": false,
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",

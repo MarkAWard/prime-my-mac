@@ -99,18 +99,15 @@ declare cask_pkgs=(
 )
 
 
+#  Nerd Fonts — includes powerline glyphs (for agnoster prompt) + icon
+#  sets for modern tools (eza --icons, lazygit, k9s, starship).
+#  Install a handful of popular options for easy switching.
 declare cask_fonts=(
-    dejavu-sans-mono-for-powerline
-    inconsolata-for-powerline
-    menlo-for-powerline
-    monofur-for-powerline
-    quantico
-    roboto
-    roboto-mono
-    roboto-mono-for-powerline
-    source-code-pro
-    ubuntu
-    ubuntu-mono-derivative-powerline
+    jetbrains-mono-nerd-font          #  Default; great readability
+    fira-code-nerd-font               #  Programming ligatures
+    meslo-lg-nerd-font                #  Classic — recommended by powerlevel10k
+    hack-nerd-font                    #  Clean, widely used
+    ubuntu-mono-nerd-font             #  Continuity with prior setup
 )
 
 
@@ -351,7 +348,7 @@ declare iterm_bookmark_settings=(
     "Name|string|Default"
     "Non Ascii Font|string|Monaco 12"
     "Non-ASCII Anti Aliased|integer|1"
-    "Normal Font|string|UbuntuMonoDerivativePowerline-Regular 16"
+    "Normal Font|string|JetBrainsMonoNFM-Regular 16"
     "Only The Default BG Color Uses Transparency|string|0"
     "Option Key Sends|integer|0"
     "Prompt Before Closing 2|integer|0"
