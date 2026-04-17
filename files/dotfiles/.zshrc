@@ -40,12 +40,9 @@ export GOROOT="$(brew --prefix golang)/libexec"
 export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
 
 
-lazy_nvm() {
-  unset -f node npm npx
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-}
+# nvm (eager — lazy-loading confused tools and agents that shell out to node/npm)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-node() { lazy_nvm; node "$@"; }
-npm()  { lazy_nvm; npm "$@"; }
-npx()  { lazy_nvm; npx "$@"; }
+# bun — globally-installed CLIs land in ~/.bun/bin
+export PATH="$HOME/.bun/bin:$PATH"

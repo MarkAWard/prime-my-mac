@@ -18,7 +18,7 @@ done
 
 #  Usage
 usage() {
-    echo -e "${BOLD}Usage${NORMAL}: ${0##*/} [ ${BOLD}--all${NORMAL} | ${BOLD}--app-configs${NORMAL} | ${BOLD}--bash-it${NORMAL} | ${BOLD}--brew${NORMAL} | ${BOLD}--cask${NORMAL} | ${BOLD}--dot-files${NORMAL} | ${BOLD}--fonts${NORMAL} | ${BOLD}--python${NORMAL} | ${BOLD}--prezto${NORMAL} | ${BOLD}--osx${NORMAL} ]" 1>&2
+    echo -e "${BOLD}Usage${NORMAL}: ${0##*/} [ ${BOLD}--all${NORMAL} | ${BOLD}--app-configs${NORMAL} | ${BOLD}--bash-it${NORMAL} | ${BOLD}--brew${NORMAL} | ${BOLD}--cask${NORMAL} | ${BOLD}--dot-files${NORMAL} | ${BOLD}--fonts${NORMAL} | ${BOLD}--node${NORMAL} | ${BOLD}--python${NORMAL} | ${BOLD}--prezto${NORMAL} | ${BOLD}--osx${NORMAL} ]" 1>&2
     exit 1
 }
 
@@ -30,6 +30,7 @@ FG_BREW=false
 FG_BREW_CASK=false
 FG_DOTFILES=false
 FG_BREW_FONTS=false
+FG_NODE=false
 FG_OSX=false
 FG_PYTHON=false
 FG_PREZTO=false
@@ -48,6 +49,7 @@ else
             --cask)        FG_BREW_CASK=true ;;         #  Brew Cask
             --dot-files)   FG_DOTFILES=true ;;          #  Dot files
             --fonts)       FG_BREW_FONTS=true ;;        #  Brew Fonts
+            --node)        FG_NODE=true ;;              #  nvm + Node LTS
             --osx)         FG_OSX=true ;;               #  OS X
             --python)      FG_PYTHON=true ;;            #  python
             --prezto)      FG_PREZTO=true ;;            #  prezto
@@ -63,6 +65,7 @@ while true; do
 
 #  Install components
 [[ "$FG_ALL" == true || "$FG_PYTHON" == true ]]     && install_python
+[[ "$FG_ALL" == true || "$FG_NODE" == true ]]       && install_node
 [[ "$FG_ALL" == true || "$FG_BREW" == true ]]       && install_brew
 [[ "$FG_ALL" == true || "$FG_BREW_CASK" == true ]]  && install_brew_cask
 [[ "$FG_ALL" == true || "$FG_BREW_FONTS" == true ]] && install_brew_fonts

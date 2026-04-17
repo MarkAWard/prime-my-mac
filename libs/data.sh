@@ -28,6 +28,7 @@ declare brew_pkgs=(
     bash                              #  Bash 4.x (macOS ships 3.2)
     bash-completion                   #  Tab completion for bash
     bat                               #  cat with syntax highlighting
+    bun                               #  Fast JS/TS runtime + package manager (replaces npm for most uses)
     colima                            #  Container runtime (Docker Desktop alternative)
     colordiff                         #  Colorized diff output wrapper
     coreutils                         #  GNU ls/cp/date/readlink/etc (g-prefixed)
@@ -56,6 +57,7 @@ declare brew_pkgs=(
     kubectx                           #  Switch kubernetes context/namespace
     kubernetes-cli                    #  kubectl
     netcat                            #  TCP/UDP swiss-army knife (nc)
+    nvm                               #  Node version manager (sourced in .zshrc)
     openssl@3                         #  TLS/crypto lib (pyenv build dep)
     postgresql@14                     #  Postgres 14 server
     postgresql@15                     #  Postgres 15 server

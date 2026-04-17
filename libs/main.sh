@@ -118,6 +118,31 @@ function install_python {
 }
 
 
+function install_node {
+    install_homebrew
+
+    #  nvm is also in brew_pkgs, but install_node runs before install_brew,
+    #  so pull it in early. The brew_pkgs entry is a no-op on re-runs.
+    local NVM_ERR_CODE=$(brew list --formula | grep -q '^nvm$'; echo $?)
+    status_msg "$NVM_ERR_CODE" "nvm"
+    if [ "${NVM_ERR_CODE}" -ne 0 ]; then
+        brew install nvm
+        status_msg "0" "nvm"
+    fi
+
+    #  brew doesn't create ~/.nvm for us — nvm expects it to exist
+    export NVM_DIR="$HOME/.nvm"
+    [ -d "$NVM_DIR" ] || mkdir -p "$NVM_DIR"
+    . "$(brew --prefix nvm)/nvm.sh"
+
+    #  Install the current LTS and pin as the default version
+    status_msg "Installing Node LTS"
+    nvm install --lts
+    nvm alias default 'lts/*'
+    status_msg "0" "Node LTS"
+}
+
+
 function install_brew {
     install_homebrew
     git -C $(brew --repository homebrew/core) checkout master
