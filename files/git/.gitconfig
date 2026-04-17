@@ -1,50 +1,53 @@
 [core]
     editor = emacs
-    excludesfile = ~/.git/.gitignore_global
-    sshCommand = "ssh -F /dev/null -o StrictHostKeyChecking=no"
+    excludesfile = ~/.config/git/.gitignore_global
     pager = delta
 
 [include]
-    path = ~/.git/.gitconfig.user
-    #  Put your Github token here
-    path = ~/.git/.gitconfig.github
+    path = ~/.config/git/.gitconfig.user
 
 [credential]
     helper = osxkeychain
-	helper = /usr/local/share/gcm-core/git-credential-manager-core
 
-[alias]
-    #  Get the current branch name (not so useful in itself, but used in other aliases)
-    branch-name = !git rev-parse --abbrev-ref HEAD
-    #  See commits not pushed yet
-    np = "!git log origin/$(git branch-name)..$(git branch-name)"
-    #  Push the current branch to the remote "origin", and set it to track the upstream branch
-    puo = "!git push -u origin $(git branch-name) --tags"
-    pom = pull origin master
-    pod = pull origin develop
-    pos = pull origin staging
-    #  Add + Commit
-    ac = !git add . && git commit -am
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
-    st = status -u
-    co = checkout
-    com = checkout master
-    nb = checkout -b
-    df = diff
-    #  Diff last commit
-    last = diff --cached HEAD^
-    recap = log --oneline --no-merges --author=ifarfan@gmx.com
-    ls = branch --list -a
-    #  Compare current branch commits to master
-    compare = "!git log --left-right --graph --cherry-pick --oneline $(git branch-name)...master"
-    #  Refresh local list of remote branches (remove old ones also removed from origin)
-    rl = remote update origin --prune
-    #  uc = undo last commit; dc = destroy last commit
-    uc = reset HEAD~1
-    dc = reset --hard HEAD~1
-    #  https://carolynvanslyck.com/blog/2020/12/git-wip/
-    wip = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
-    authors = shortlog -sne --all --no-merges
+[init]
+    defaultBranch = main
+
+[fetch]
+    prune = true
+
+[push]
+    default = current
+
+[pull]
+    rebase = false
+
+[rebase]
+    autoStash = true
+
+[rerere]
+    enabled = true
+
+[diff]
+    #  Use (i)ndex/(w)ork tree/(c)ommit/(o)bject prefixes instead of a/b/c/d
+    mnemonicprefix = true
+    algorithm = patience
+    colorMoved = default
+
+[grep]
+    extendRegexp = true
+    lineNumber = true
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    features = side-by-side line-numbers decorations
+    whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none
 
 [color]
     branch = auto
@@ -67,30 +70,53 @@
     changed = green
     untracked = cyan
 
-[http]
-    sslVerify = false
+[alias]
+    #  Current branch name (building block for other aliases)
+    branch-name = !git rev-parse --abbrev-ref HEAD
 
-[diff]
-    #  Git diff will use (i)ndex, (w)ork tree, (c)ommit and (o)bject
-    #  instead of a/b/c/d as prefixes for patches
-    mnemonicprefix = true
-    algorithm = patience
+    #  Commits on the current branch not yet pushed
+    np = "!git log origin/$(git branch-name)..$(git branch-name)"
 
-[grep]
-    extendRegexp = true
-    lineNumber = true
+    #  Push the current branch and set upstream
+    puo = "!git push -u origin $(git branch-name)"
 
-[interactive]
-    diffFilter = delta --color-only
+    #  Pull the current branch from origin
+    po = "!git pull origin $(git branch-name)"
 
-[delta]
-    features = side-by-side line-numbers decorations
-    whitespace-error-style = 22 reverse
+    #  Add everything + commit (takes the commit message as the argument)
+    ac = !git add . && git commit -am
 
-[delta "decorations"]
-    commit-decoration-style = bold yellow box ul
-    file-style = bold yellow ul
-    file-decoration-style = none
+    #  Pretty log graph
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 
-[pull]
-	rebase = false
+    #  Shortcuts
+    st = status -u
+    co = checkout
+    nb = checkout -b
+    df = diff
+
+    #  Diff the last commit against the previous one
+    last = diff --cached HEAD^
+
+    #  Summarize your own commits
+    recap = "!git log --oneline --no-merges --author=\"$(git config user.email)\""
+
+    #  List all branches (local + remote)
+    ls = branch --list -a
+
+    #  Compare the current branch's commits to main
+    compare = "!git log --left-right --graph --cherry-pick --oneline $(git branch-name)...main"
+
+    #  Refresh local list of remote branches (prune stale ones)
+    rl = remote update origin --prune
+
+    #  uc = undo last commit (keep changes); dc = destroy last commit (discard)
+    uc = reset HEAD~1
+    dc = reset --hard HEAD~1
+
+    #  Branches sorted by most recent activity
+    #  https://carolynvanslyck.com/blog/2020/12/git-wip/
+    wip = for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+
+    #  Authors across the repo
+    authors = shortlog -sne --all --no-merges

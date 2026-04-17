@@ -184,6 +184,30 @@ function install_brew_cask {
     status_msg "0" "cask packages"
 }
 
+function install_github_auth {
+    #
+    #  Interactive GitHub auth via `gh`. Replaces the old pattern of
+    #  committing a plaintext token in ~/.git/.gitconfig.github. `gh auth
+    #  setup-git` wires gh in as a git credential helper so cloning/pushing
+    #  over HTTPS Just Works.
+    #
+    if ! command -v gh >/dev/null 2>&1; then
+        status_msg "ALERT" "gh not found — run --brew first, then --github"
+        return
+    fi
+
+    if gh auth status >/dev/null 2>&1; then
+        status_msg "0" "GitHub already authenticated"
+        return
+    fi
+
+    status_msg "Authenticating with GitHub (interactive)"
+    gh auth login
+    gh auth setup-git
+    status_msg "0" "GitHub auth"
+}
+
+
 function install_brew_fonts {
     install_homebrew
 
@@ -276,13 +300,19 @@ function install_dotfiles {
     status_msg "0" "colorize"
 
     #
-    #  git
+    #  git — stage under XDG-standard ~/.config/git/. Avoid the old ~/.git/
+    #  location: git treats $HOME/.git as repo metadata, so any git command
+    #  run from $HOME would pick it up as an active repo.
     #
-    cp -R ./files/git "${HOME}/.git"
-    for g_file in ./files/git/.*; do
-        gitfile=$(basename ${g_file})
-        ln -sf "${HOME}/.git/${gitfile}" "${HOME}/${gitfile}"
+    mkdir -p "${HOME}/.config/git"
+    cp -R ./files/git/. "${HOME}/.config/git/"
+    ln -sf "${HOME}/.config/git/.gitconfig" "${HOME}/.gitconfig"
+
+    #  Scrub stale symlinks from the previous ~/.git/ staging pattern
+    for stale in .gitconfig.user .gitconfig.github .gitconfig.github-sample .gitignore_global; do
+        [ -L "${HOME}/${stale}" ] && rm -f "${HOME}/${stale}"
     done
+
     status_msg "0" "Git configs"
 
     #
