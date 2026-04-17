@@ -76,13 +76,14 @@ sudo -v
 while true; do
     sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-#  Install components
-[[ "$FG_ALL" == true || "$FG_PYTHON" == true ]]     && install_python
-[[ "$FG_ALL" == true || "$FG_NODE" == true ]]       && install_node
+#  Install components — brew first so language toolchains below have their
+#  build deps (pyenv needs openssl/readline/sqlite/xz/zlib from brew_pkgs).
 [[ "$FG_ALL" == true || "$FG_BREW" == true ]]       && install_brew
 [[ "$FG_ALL" == true || "$FG_BREW_CASK" == true ]]  && install_brew_cask
 [[ "$FG_ALL" == true || "$FG_BREW_FONTS" == true ]] && install_brew_fonts
 [[ "$FG_ALL" == true || "$FG_GITHUB" == true ]]     && install_github_auth
+[[ "$FG_ALL" == true || "$FG_PYTHON" == true ]]     && install_python
+[[ "$FG_ALL" == true || "$FG_NODE" == true ]]       && install_node
 
 #  OS X Customizations
 if [[ "$FG_ALL" == true || "$FG_OSX" == true ]]; then

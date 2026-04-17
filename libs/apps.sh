@@ -47,6 +47,17 @@ function iterm2_config {
     status_msg "Custom iTerm2.app config"
 
     local ITERM2_PLIST="${HOME}/Library/Preferences/com.googlecode.iterm2.plist"
+
+    #  On a fresh install iTerm2 hasn't been launched yet, so no plist exists
+    #  and all of our defaults-write / PlistBuddy calls below would be no-ops.
+    #  Launch it briefly to seed the file, then quit.
+    if [ ! -f "${ITERM2_PLIST}" ] && [ -d "/Applications/iTerm.app" ]; then
+        open -ga iTerm
+        sleep 3
+        osascript -e 'tell application "iTerm" to quit' >/dev/null 2>&1
+        sleep 1
+    fi
+
     if [ -f ${ITERM2_PLIST} ]; then
 
         #  Set custom settings

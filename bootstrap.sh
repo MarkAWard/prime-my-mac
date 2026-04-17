@@ -69,8 +69,16 @@ function install_xcode_cli {
     xcode-select --install > /dev/null 2>&1
 
     echo "Waiting for the Xcode CLT install to complete (click Install in the dialog, then wait)..."
+    local waited=0
+    local max_wait=1200   # 20 minutes
     until xcode-select -p > /dev/null 2>&1; do
+        if [ "$waited" -ge "$max_wait" ]; then
+            echo "Error: Xcode CLT did not finish installing within ${max_wait}s."
+            echo "If you cancelled the dialog, re-run bootstrap.sh to try again."
+            exit 1
+        fi
         sleep 10
+        waited=$((waited + 10))
     done
     echo "Xcode Command Line Tools installed."
 }

@@ -91,6 +91,13 @@ function install_python {
     eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
 
+    #  Python build dependencies. These are also in brew_pkgs, but we install
+    #  them here too so `--python` can be run standalone. `brew install` on
+    #  already-installed formulae is near-instant (just prints a notice).
+    status_msg "Ensuring Python build dependencies"
+    brew install openssl@3 readline sqlite xz zlib ca-certificates
+    status_msg "0" "Python build dependencies"
+
     #  Install python versions (-s skips already-installed)
     status_msg "Installing python versions"
     for ver in "${pyenv_versions[@]}"; do
@@ -249,7 +256,9 @@ function install_bash_it {
         status_msg "1" "bash-it"
 
         git clone --depth=1 https://github.com/Bash-it/bash-it.git ${HOME}/.bash_it
-        ${HOME}/.bash_it/install.sh
+        #  --silent enables bash-it's default set of aliases/plugins/completions
+        #  and skips the interactive prompt that would otherwise hang --all runs.
+        ${HOME}/.bash_it/install.sh --silent
     fi
     chsh -s /bin/bash
 
