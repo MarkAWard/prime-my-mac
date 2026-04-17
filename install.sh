@@ -87,13 +87,9 @@ fi
 #  App specific Customizations
 if [[ "$FG_ALL" == true || "$FG_APPS" == true ]]; then
     activity_monitor_config
-    google_chrome_config
     terminal_config
     vscode_config
     iterm2_config
-    itunes_config
-    mail_config
-    safari_config
 fi
 
 #  Set user shell last

@@ -26,36 +26,6 @@ function activity_monitor_config {
 }
 
 
-function google_chrome_config {
-    status_msg "Custom Google Chrome.app config"
-
-    #  Copy master_preferences file for automated install on first use
-    #  - https://support.google.com/chrome/a/answer/187948
-    #  - https://support.google.com/chrome/a/answer/188453
-    cp -n ./files/chrome_master_preferences.json '/Applications/Google Chrome.app/Contents/MacOS/master_preferences'
-
-    local CHROME_PLIST="$HOME/Library/Preferences/com.google.Chrome.plist"
-    if [ -f $CHROME_PLIST ]; then
-
-        #  Allow installing user scripts via GitHub Gist or Userscripts.org
-        defaults write com.google.Chrome ExtensionInstallSources -array "https://gist.githubusercontent.com/" "http://userscripts.org/*"
-
-        #  Disable the all too sensitive backswipe on trackpads
-        # defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
-
-        #  Disable the all too sensitive backswipe on Magic Mouse
-        # defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
-
-        #  Use the system-native print preview dialog
-        defaults write com.google.Chrome DisablePrintPreview -bool true
-
-        #  Expand the print dialog by default
-        defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
-    fi
-    status_msg "0" "Custom Google Chrome.app config"
-}
-
-
 function terminal_config {
     status_msg "Custom Terminal.app config"
 
@@ -145,67 +115,3 @@ function vscode_config {
     status_msg "0" "Custom VSCode.app config"
 }
 
-function itunes_config {
-    status_msg "Custom iTunes.app config"
-
-    #  Stop iTunes from responding to the keyboard media keys
-    launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
-
-    status_msg "0" "Custom iTunes.app config"
-}
-
-function mail_config {
-    status_msg "Custom Mail.app config"
-
-    #  Disable send and reply animations in Mail.app
-    defaults write com.apple.mail DisableReplyAnimations -bool true
-    defaults write com.apple.mail DisableSendAnimations -bool true
-
-    #  Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
-    defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
-
-    #  Add the keyboard shortcut ⌘ + Enter to send an email in Mail.app
-    # defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" -string "@\\U21a9"
-
-    #  Display emails in threaded mode
-    defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-    # defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
-    # defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
-
-    #  Disable inline attachments (just show the icons)
-    defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
-
-    #  Disable spell checking
-    # defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
-
-    status_msg "0" "Custom Mail.app config"
-}
-
-function safari_config {
-    status_msg "Custom Safari.app config"
-
-    #  Set Safari’s home page to `about:blank` for faster loading
-    defaults write com.apple.Safari HomePage -string "about:blank"
-
-    #  Prevent Safari from opening ‘safe’ files automatically after downloading
-    defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
-
-    #  Show status bar at bottom to view URLs links on hover
-    defaults write com.apple.Safari 'ShowStatusBar' -bool true
-
-    #  Disable Safari’s thumbnail cache for History and Top Sites
-    defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
-
-    #  Enable Safari’s debug menu
-    defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-
-    #  Enable the Develop menu and the Web Inspector in Safari
-    defaults write com.apple.Safari IncludeDevelopMenu -bool true
-    defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-    defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
-
-    #  Add a context menu item for showing the Web Inspector in web views
-    defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
-
-    status_msg "0" "Custom Safari.app config"
-}
