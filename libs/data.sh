@@ -88,15 +88,17 @@ declare brew_pkgs=(
 #  :l == laptop-only, :u == "Utilities" folder-only
 declare cask_pkgs=(
     1password
+    1password-cli
     cursor
     dbeaver-community
-    docker
+    docker-desktop
     google-chrome
     iterm2
     postman
     rectangle
     spotify
     visual-studio-code
+    wispr-flow
 )
 
 
