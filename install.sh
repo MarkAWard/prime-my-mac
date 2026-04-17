@@ -47,8 +47,10 @@ FG_OSX=false
 FG_PYTHON=false
 FG_PREZTO=false
 
-#  Determine flags enabled via parameters
-if [ -z "$@" ]; then
+#  Determine flags enabled via parameters. `[ -z "$@" ]` expands to multiple
+#  args when more than one flag is passed and errors with "too many arguments",
+#  so check the positional count directly.
+if [ "$#" -eq 0 ]; then
     usage
 else
     for arg in "$@"; do
