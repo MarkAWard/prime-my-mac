@@ -96,16 +96,26 @@ function iterm2_config {
         defaults write com.googlecode.iterm2 UseBorder -bool true
         defaults write com.googlecode.iterm2 WindowNumber -bool true;
 
-        #  Set custom bookmarks settings
+        #  Apply bookmark settings to the default profile (New Bookmarks[0]).
+        #  PlistBuddy's Set fails if the key doesn't exist yet, so fall back
+        #  to Add. (Note: prior versions of this loop passed the value in
+        #  place of the key path on the Add branch, so missing keys were
+        #  never actually added.)
         for bookmark in "${iterm_bookmark_settings[@]}"; do
             key_name=$( echo "${bookmark}" | cut -d'|' -f1)
             key_type=$( echo "${bookmark}" | cut -d'|' -f2)
             key_value=$(echo "${bookmark}" | cut -d'|' -f3)
 
-            #  Update Bookmark key
-            local SET_BOOKMARK=$(/usr/libexec/PlistBuddy -c "Set :\"New Bookmarks\":0:\"${key_name}\" \"${key_value}\"" ${ITERM2_PLIST} > /dev/null 2>&1; echo $?)
-            [ ! ${SET_BOOKMARK} ] && /usr/libexec/PlistBuddy -c "Add :\"New Bookmarks\":0:\"${key_value}\" ${key_type} \"${key_value}\"" ${ITERM2_PLIST}
+            if ! /usr/libexec/PlistBuddy -c "Set :\"New Bookmarks\":0:\"${key_name}\" \"${key_value}\"" "${ITERM2_PLIST}" >/dev/null 2>&1; then
+                /usr/libexec/PlistBuddy -c "Add :\"New Bookmarks\":0:\"${key_name}\" ${key_type} \"${key_value}\"" "${ITERM2_PLIST}" >/dev/null 2>&1
+            fi
         done
+
+        #  Force cfprefsd to drop its cache so the next `defaults read` sees
+        #  our changes. iTerm2 still needs to be quit and relaunched — it
+        #  holds prefs in memory and rewrites the plist on quit, which would
+        #  otherwise clobber what we just wrote.
+        killall cfprefsd 2>/dev/null
     fi
 
     status_msg "0" "Custom iTerm2.app config"
