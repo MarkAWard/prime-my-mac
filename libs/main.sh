@@ -69,9 +69,6 @@ function install_homebrew {
     local BREW_ERR_CODE=$(command -v brew > /dev/null 2>&1; echo $?)
     status_msg "$BREW_ERR_CODE" "homebrew"
     [ "$BREW_ERR_CODE" -ne 0 ] && /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    #  Copy aggresive .curl file to optimize brew installs
-    cp -n "./files/dotfiles/.curl" "${HOME}/.curl"
 }
 
 

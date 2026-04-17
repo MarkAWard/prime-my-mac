@@ -20,6 +20,7 @@ alias grc &>/dev/null && unalias grc
 #  coreutils `ls` is on PATH via .zprofile — load dircolors and turn on color
 eval `dircolors ${HOME}/.dircolors`
 alias ls='ls --color=auto'
+alias grep='grep --color=auto'
 
 #  Aliases -- https://natelandau.com/my-mac-osx-bash_profile/
 alias cp='cp -iv'                                   # Preferred 'cp' implementation

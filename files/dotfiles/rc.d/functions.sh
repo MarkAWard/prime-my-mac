@@ -1,13 +1,3 @@
-# shell version of ord() and chr()
-ord() { printf "0x%x\n" "'$1"; }
-chr() { printf $(printf '\\%03o\\n' "$1"); }
-
-# highlight text
-highlight() { e="$1"; shift; grep --color=always -Eih "$e|$" "$@"; }
-
-# grep all the history!
-histgrep() { grep "$1" "$HISTFILE"; }
-
 # grep process table
 psgrep() { psc |grep -v grep |grep -i --color=auto "$@"; }
 
@@ -83,7 +73,5 @@ unsetall() {
 }
 
 #  Aliases -- https://natelandau.com/my-mac-osx-bash_profile/
-# function cd() { builtin cd "$@"; ll; }              # Always list directory contents upon 'cd'
 mcd () { mkdir -p "$1" && cd "$1"; }                # Makes new Dir and jumps inside
-trash () { command mv "$@" ~/.Trash ; }             # Moves a file to the MacOS trash
 ql () { qlmanage -p "$*" >& /dev/null; }            # Opens any file in MacOS Quicklook Preview

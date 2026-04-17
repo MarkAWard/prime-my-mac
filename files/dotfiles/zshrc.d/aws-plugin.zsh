@@ -68,24 +68,14 @@ function _aws_profiles() {
 }
 compctl -K _aws_profiles asp
 
-# AWS prompt
+# AWS prompt (red background for *-prod / production profiles)
 function aws_prompt_info() {
   [[ -z $AWS_PROFILE ]] && return
-#   echo "${ZSH_THEME_AWS_PREFIX:=<aws:}${AWS_PROFILE}${ZSH_THEME_AWS_SUFFIX:=>}"
   case "$AWS_PROFILE" in
-    *-prod|*production*) prompt_segment red black  "${ZSH_THEME_AWS_PREFIX:=<aws:}${AWS_PROFILE}${ZSH_THEME_AWS_SUFFIX:=>}" ;;
+    *-prod|*production*) prompt_segment red black "${ZSH_THEME_AWS_PREFIX:=<aws:}${AWS_PROFILE}${ZSH_THEME_AWS_SUFFIX:=>}" ;;
     *) echo "${ZSH_THEME_AWS_PREFIX:=<aws:}${AWS_PROFILE}${ZSH_THEME_AWS_SUFFIX:=>}" ;;
   esac
 }
-
-prompt_aws() {
-  [[ -z "$AWS_PROFILE" ]] && return
-  case "$AWS_PROFILE" in
-    *-prod|*production*) prompt_segment red yellow  "AWS: $AWS_PROFILE" ;;
-    *) prompt_segment green black "${ZSH_THEME_AWS_PREFIX:=AWS: }$AWS_PROFILE" ;;
-  esac
-}
-
 
 if [[ "$SHOW_AWS_PROMPT" == true && "$RPROMPT" != *'$(aws_prompt_info)'* ]]; then
   RPROMPT='$(aws_prompt_info)'"$RPROMPT"
