@@ -511,25 +511,6 @@ EOF
 }
 
 
-function ssd_tweaks {
-    local SSD_ERR_CODE=$(system_profiler SPSerialATADataType | grep Model | grep SSD > /dev/null 2>&1; echo $?)
-
-    if [ "$SSD_ERR_CODE" -eq 0 ]; then
-        status_msg "Custom SSD tweaks"
-
-        #  Disable hibernation (speeds up entering sleep mode)
-        sudo pmset -a hibernatemode 0
-
-        #  Disable the sudden motion sensor — not useful for SSDs
-        sudo pmset -a sms 0
-
-        status_msg "0" "Custom SSD tweaks"
-    else
-        status_msg "0" "No SSDs found"
-    fi
-}
-
-
 function spotlight_tweaks {
     status_msg "Custom Spotlight tweaks"
 

@@ -94,7 +94,6 @@ if [[ "$FG_ALL" == true || "$FG_OSX" == true ]]; then
     input_device_tweaks
     screen_tweaks
     spotlight_tweaks
-    ssd_tweaks
     energy_tweaks
     miscellaneous_tweaks
     security_tweaks
