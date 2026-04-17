@@ -7,8 +7,10 @@ Automate local, new Mac setup and configuration.
 **Virgin Mac, one-shot:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/MarkAWard/prime-my-mac/master/bootstrap.sh | bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/MarkAWard/prime-my-mac/master/bootstrap.sh)"
 ```
+
+This wrapper pattern (same as Homebrew's own installer) keeps bash's stdin attached to your terminal — piping `curl | bash` instead would skip the "press Enter" prompt and break Homebrew's Xcode CLT install step.
 
 `bootstrap.sh` installs Homebrew (which pulls in Xcode Command Line Tools as a side effect), clones this repo into `~/.prime-my-mac`, and hands off to `./install.sh --all`.
 

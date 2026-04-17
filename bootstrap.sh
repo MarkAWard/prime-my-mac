@@ -9,7 +9,11 @@
 #  Download repo and run install
 #
 #  To install:
-#  curl -fsSL https://raw.githubusercontent.com/markaward/prime-my-mac/master/bootstrap.sh | bash
+#  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/MarkAWard/prime-my-mac/master/bootstrap.sh)"
+#
+#  Use the `bash -c "$(curl ...)"` pattern — piping `curl | bash` disconnects
+#  stdin from the terminal, which breaks any `read` prompts and makes the
+#  Homebrew installer skip its Xcode CLT wait step.
 #
 #  Original source from https://github.com/ifarfan/prime-my-mac
 
@@ -49,47 +53,26 @@ EOF
 }
 
 
-function install_homebrew {
-    #
-    #  Bootstrap Homebrew on a virgin Mac. Runs before libs/ are sourced,
-    #  so it can't depend on helpers like status_msg. Triggers the Xcode
-    #  Command Line Tools installer as a side effect, which gives us git
-    #  for the clone step below.
-    #
-    if ! command -v brew > /dev/null 2>&1; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-        # On Apple Silicon brew installs to /opt/homebrew and isn't on PATH
-        if [ -x /opt/homebrew/bin/brew ]; then
-            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "${HOME}/.zprofile"
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
-        brew doctor
-    fi
-}
-
 function install_xcode_cli {
-    XCODE_ERR_CODE=$(xcode-select -p > /dev/null 2>&1; echo $?)
-
-    if [ "$XCODE_ERR_CODE" -ne 0 ]; then
-        echo "Installing XCode Command Line Tools..."
-        osascript  -e "display notification \"Installing XCode Command Line Tools...\" with title \"prime-my-mac\"  subtitle \"...\""
-
-        #
-        # Homebrew will install xcode if it detects it is missing
-        # https://www.freecodecamp.org/news/install-xcode-command-line-tools/
-        #
-        install_homebrew
-
-        #
-        #  Trick "softwareupdate" into assuming that we were installing the CLI tool before and it will attempt to continue
-        #  With lots of help from https://github.com/timsutton/osx-vm-templates/blob/master/scripts/xcode-cli-tools.sh
-        #
-        # touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-        # XCODE_CLT_VER=$(softwareupdate --list | grep "\*.*Command Line" | tail -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
-        # softwareupdate --install "$XCODE_CLT_VER" --verbose
-        # rm -rf /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+    #
+    #  Install Xcode Command Line Tools and BLOCK until they're actually
+    #  on disk. We need `git` before we can clone the repo; brew's
+    #  installer can trigger the CLT GUI prompt but doesn't wait for it
+    #  to finish, so we do the install + wait explicitly here.
+    #
+    if xcode-select -p > /dev/null 2>&1; then
+        return
     fi
+
+    echo "Installing Xcode Command Line Tools..."
+    osascript -e "display notification \"Click Install in the Xcode CLT dialog — prime-my-mac will resume when it's done\" with title \"prime-my-mac\" subtitle \"...\""
+    xcode-select --install > /dev/null 2>&1
+
+    echo "Waiting for the Xcode CLT install to complete (click Install in the dialog, then wait)..."
+    until xcode-select -p > /dev/null 2>&1; do
+        sleep 10
+    done
+    echo "Xcode Command Line Tools installed."
 }
 
 
