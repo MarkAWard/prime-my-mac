@@ -28,7 +28,6 @@ export LC_ALL='en_US.UTF-8'
 #
 # Paths
 #
-export PYTHONPATH="$PYTHONPATH"
 
 # Ensure path arrays do not contain duplicates.
 typeset -gU cdpath fpath mailpath path

@@ -22,15 +22,18 @@ zstyle ':prezto:*:*' color 'yes'
 # zstyle ':prezto:load' zfunction 'zargs' 'zmv'
 
 # Set the Prezto modules to load (browse modules).
-# The order matters.
-# Commented out modules: directory, spectrum, ssh, utility, python, homebrew, osx, docker, syntax-highlighting, autosuggestions
+# Order matters: syntax-highlighting must come before history-substring-search
+# and prompt. See https://github.com/sorin-ionescu/prezto/tree/master/modules
 zstyle ':prezto:load' pmodule \
   'environment' \
   'terminal' \
   'editor' \
   'history' \
   'completion' \
+  'homebrew' \
+  'osx' \
   'git' \
+  'docker' \
   'syntax-highlighting' \
   'history-substring-search' \
   'autosuggestions' \
@@ -150,7 +153,7 @@ zstyle ':prezto:module:syntax-highlighting' highlighters \
 zstyle ':prezto:module:terminal' auto-title 'yes'
 
 # Set the window title format.
-zstyle ':prezto:module:terminal:window-title' format '%n@%m: %s'
+zstyle ':prezto:module:terminal:window-title' format '%s'
 
 # Set the tab title format.
 # zstyle ':prezto:module:terminal:tab-title' format '%m: %s'

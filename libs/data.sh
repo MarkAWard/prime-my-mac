@@ -29,6 +29,7 @@ declare brew_pkgs=(
     bash-completion                   #  Tab completion for bash
     bat                               #  cat with syntax highlighting
     bun                               #  Fast JS/TS runtime + package manager (replaces npm for most uses)
+    ca-certificates                   #  CA root certs bundle (referenced by .zshrc for Python TLS)
     colima                            #  Container runtime (Docker Desktop alternative)
     colordiff                         #  Colorized diff output wrapper
     coreutils                         #  GNU ls/cp/date/readlink/etc (g-prefixed)

@@ -30,17 +30,21 @@ fi
 # User-local bin (pipx, uv tool installs, etc.)
 export PATH="$HOME/.local/bin:$PATH"
 
-# Fix zscaler certs issue with python requests
+# Python TLS: point requests/urllib at Homebrew's CA bundle so HTTPS calls
+# don't fail with CERTIFICATE_VERIFY_FAILED (Python can't read macOS's
+# system trust store directly).
 export REQUESTS_CA_BUNDLE=/opt/homebrew/etc/ca-certificates/cert.pem
 export SSL_CERT_FILE=/opt/homebrew/etc/ca-certificates/cert.pem
 
 # golang
-export GOPATH=$HOME/go
-export GOROOT="$(brew --prefix golang)/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+if command -v go &>/dev/null; then
+    export GOPATH=$HOME/go
+    export GOROOT="$(brew --prefix golang)/libexec"
+    export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin"
+fi
 
 
-# nvm (eager — lazy-loading confused tools and agents that shell out to node/npm)
+# nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
