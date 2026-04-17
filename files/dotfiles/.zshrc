@@ -27,8 +27,8 @@ if command -v pyenv-virtualenv &>/dev/null; then
     eval "$(pyenv virtualenv-init -)"
 fi
 
-# poetry
-export PATH="/Users/markward/.local/bin:$PATH"
+# User-local bin (pipx, uv tool installs, etc.)
+export PATH="$HOME/.local/bin:$PATH"
 
 # Fix zscaler certs issue with python requests
 export REQUESTS_CA_BUNDLE=/opt/homebrew/etc/ca-certificates/cert.pem

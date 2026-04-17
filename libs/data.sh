@@ -5,27 +5,20 @@
 #
 
 declare pyenv_versions=(
-    2.7.18
-    3.6.15
-    3.7.13
-    3.8.13
-    3.9.13
-    3.10.5
+    3.11.15
+    3.12.13
+    3.13.13
+    3.14.4
 )
-declare pyenv_global=3.9.13
+declare pyenv_global=3.14.4
 
-#  pip packages
+#  pip packages installed into the pyenv_global interpreter
 declare pip_pkgs=(
-    black                             #  Uncompromising code formatter
-    boto3                             #  AWS SDK
-    bump2version                      #  Code versioning via cmd-line
-    docker                            #  Docker python lib
-    flake8                            #  Python linter
-    json2yaml                         #  YAML for the win!
-    mypy                              #  Python static type checker
-    pygments                          #  File colorization from terminal
-    pylint                            #  Python linter
-    shyaml                            #  YAML parser
+    black                             #  Opinionated code formatter
+    flake8                            #  Python linter (legacy — ruff covers most of this)
+    ipython                           #  Interactive Python REPL
+    mypy                              #  Static type checker
+    ruff                              #  Fast linter + formatter (Rust)
 )
 
 #  homebrew packages
@@ -67,6 +60,7 @@ declare brew_pkgs=(
     postgresql@14                     #  Postgres 14 server
     postgresql@15                     #  Postgres 15 server
     pinentry-mac                      #  macOS passphrase prompt for GPG
+    poetry                            #  Python packaging & dependency manager
     pre-commit                        #  Git pre-commit hook framework
     pv                                #  Pipe viewer — progress bar for shell pipelines
     pyenv                             #  Python version manager
@@ -79,6 +73,7 @@ declare brew_pkgs=(
     tmux                              #  Terminal multiplexer (also used by workmux)
     trash                             #  Move files to macOS Trash instead of rm
     tree                              #  Recursive directory listing as a tree
+    uv                                #  Fast Python package/project manager (Rust)
     watch                             #  Re-run a command periodically and display output
     wget                              #  HTTP downloader (recursive fetch)
     raine/workmux/workmux             #  Git worktree + tmux workflow tool (custom tap)

@@ -78,36 +78,39 @@ function install_homebrew {
 function install_python {
     install_homebrew
 
+    #  pyenv is also listed in brew_pkgs, but install_python runs before
+    #  install_brew (see install.sh), so we need pyenv available here first.
+    #  The brew_pkgs entry is a no-op on re-runs.
     local PYENV_ERR_CODE=$(brew list --formula | grep -q pyenv$; echo $?)
     status_msg "$PYENV_ERR_CODE" "pyenv"
     if [ "${PYENV_ERR_CODE}" -ne 0 ]; then
-        #  Install latest version of pyenv
         brew install pyenv
         status_msg "0" "pyenv"
     fi
     eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
 
-    #  Install python versions
+    #  Install python versions (-s skips already-installed)
     status_msg "Installing python versions"
     for ver in "${pyenv_versions[@]}"; do
         pyenv install -s $ver
     done
     pyenv global $pyenv_global
+    pyenv rehash
     status_msg "0" "python versions"
 
-    #  Install pip packages
+    #  Install pip packages into the pyenv_global interpreter
     status_msg "Installing pip packages"
-    pip install -qq -U pip
+    python -m pip install --upgrade --quiet pip
     for pkg in "${pip_pkgs[@]}"; do
-        pip install $pkg --quiet
+        python -m pip install --upgrade --quiet $pkg
     done
+    pyenv rehash   # make new CLI shims (ruff, ipython, black...) available
     status_msg "0" "pip packages"
 
     local PYENVVENV_ERR_CODE=$(brew list --formula | grep -q pyenv-virtualenv$; echo $?)
     status_msg "$PYENVVENV_ERR_CODE" "pyenv-virtualenv"
     if [ "${PYENVVENV_ERR_CODE}" -ne 0 ]; then
-        #  Install latest version of pyenv
         brew install pyenv-virtualenv
         status_msg "0" "pyenv-virtualenv"
     fi
